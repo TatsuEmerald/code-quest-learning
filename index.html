@@ -8,37 +8,27 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        body { background: #0f172a; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    </style>
 </head>
-<body class="min-h-screen bg-sky-400 flex items-center justify-center font-sans text-slate-800">
+<body class="min-h-screen flex items-center justify-center font-sans">
 
-    <div id="app-container" class="w-full max-w-md p-6">
-        <div class="bg-white p-8 rounded-[2rem] shadow-2xl">
-            <h1 class="text-4xl font-black text-center mb-2 text-sky-600">CodeQuest</h1>
-            <p class="text-center text-slate-500 mb-8 font-semibold">Begin your coding adventure!</p>
+    <div id="app-container" class="w-full max-w-4xl p-6">
+        <div class="glass p-8 rounded-[2.5rem] shadow-2xl max-w-md mx-auto">
+            <h1 class="text-5xl font-black text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
+            <p class="text-center text-slate-300 mb-8 font-medium">Your neon coding adventure awaits!</p>
             
-            <div class="space-y-4">
-                <input type="email" id="email" placeholder="Parent's Email" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-sky-400">
-                <input type="password" id="password" placeholder="Create Password" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-sky-400">
-                
-                <button onclick="alert('Try Google Login for now!')" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-2xl shadow-lg">
-                    START MY QUEST!
-                </button>
-
-                <div class="relative flex py-2 items-center">
-                    <div class="flex-grow border-t border-slate-200"></div>
-                    <span class="flex-shrink mx-4 text-slate-400 text-sm">OR</span>
-                    <div class="flex-grow border-t border-slate-200"></div>
-                </div>
-
-                <button onclick="loginWithGoogle()" class="w-full bg-white border-2 border-slate-200 text-slate-700 font-bold py-3 rounded-2xl flex items-center justify-center gap-2 hover:bg-slate-50">
-                    <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-5 h-5">
-                    Continue with Google
-                </button>
-            </div>
+            <button onclick="loginWithGoogle()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-6 h-6">
+                CONTINUE WITH GOOGLE
+            </button>
         </div>
     </div>
 
     <script>
+        // --- YOUR SECURE CONFIG ---
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
           authDomain: "codequest-c1da5.firebaseapp.com",
@@ -53,46 +43,85 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        let selectedMascot = ""; 
+
+        // --- STEP 1: LOGIN ---
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    goToMascotSelection();
-                })
-                .catch((error) => {
-                    alert("Login Error: " + error.message);
-                });
+            auth.signInWithPopup(provider).then(() => {
+                goToMascotSelection();
+            }).catch((e) => alert(e.message));
         }
 
+        // --- STEP 2: CHOOSE HERO ---
         function goToMascotSelection() {
             const container = document.getElementById('app-container');
             container.innerHTML = `
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold text-white mb-8">Choose Your Hero</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div onclick="saveMascot('dragon')" class="bg-white p-4 rounded-3xl shadow-xl cursor-pointer hover:scale-105 transition-all">
-                            <img src="dragon.png" class="w-full rounded-2xl mb-2">
-                            <p class="font-bold">Brave Cinder</p>
+                    <h2 class="text-4xl font-black text-white mb-8 tracking-tight">CHOOSE YOUR HERO</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div onclick="selectHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all">
+                            <img src="dragon.png" class="w-64 mx-auto mb-4 drop-shadow-2xl">
+                            <p class="text-2xl font-black text-cyan-400">BRAVE CINDER</p>
                         </div>
-                        <div onclick="saveMascot('unicorn')" class="bg-white p-4 rounded-3xl shadow-xl cursor-pointer hover:scale-105 transition-all">
-                            <img src="unicorn.png" class="w-full rounded-2xl mb-2">
-                            <p class="font-bold">Magic Sparkle</p>
+                        <div onclick="selectHero('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 hover:shadow-[0_0_30px_rgba(232,121,249,0.4)] transition-all">
+                            <img src="unicorn.png" class="w-64 mx-auto mb-4 drop-shadow-2xl">
+                            <p class="text-2xl font-black text-fuchsia-400">MAGIC SPARKLE</p>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function saveMascot(type) {
+        function selectHero(hero) {
+            selectedMascot = hero;
+            goToLanguageSelection();
+        }
+
+        // --- STEP 3: CHOOSE LANGUAGE ---
+        function goToLanguageSelection() {
+            const container = document.getElementById('app-container');
+            const heroColor = selectedMascot === 'dragon' ? 'text-cyan-400' : 'text-fuchsia-400';
+            
+            container.innerHTML = `
+                <div class="text-center max-w-lg mx-auto">
+                    <h2 class="text-4xl font-black text-white mb-4">PICK A QUEST</h2>
+                    <p class="text-slate-300 mb-8 font-bold italic">Hero: <span class="${heroColor} uppercase">${selectedMascot}</span></p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="finalSave('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">JAVASCRIPT</button>
+                        <button onclick="finalSave('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">PYTHON</button>
+                        <button onclick="finalSave('CSS')" class="w-full bg-pink-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">CSS DESIGN</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- STEP 4: SAVE & SHOW MAP ---
+        function finalSave(lang) {
             const user = auth.currentUser;
             if (user) {
                 db.collection("users").doc(user.uid).set({
-                    mascot: type,
+                    mascot: selectedMascot,
+                    chosenLanguage: lang,
                     setupComplete: true
                 }, { merge: true }).then(() => {
-                    alert("Hero saved! Adventure starts next!");
+                    goToMap();
                 });
             }
+        }
+
+        function goToMap() {
+            const container = document.getElementById('app-container');
+            container.className = "w-full h-screen flex items-center justify-center p-0";
+            container.innerHTML = `
+                <div class="relative w-[90vw] h-[80vh] bg-cover bg-center rounded-[3rem] border-4 border-white/20 shadow-2xl overflow-hidden" 
+                     style="background-image: url('map.png');">
+                    <div class="absolute top-6 left-6 glass px-6 py-2 rounded-full">
+                        <p class="text-white font-black tracking-widest">LEVEL 1: THE NEON COAST</p>
+                    </div>
+                </div>
+            `;
         }
     </script>
 </body>
