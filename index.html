@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Full Adventure</title>
+    <title>CodeQuest: Choose Your Path</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -14,15 +14,20 @@
         .code-font { font-family: 'Fira Code', monospace; }
         .mascot-layer { z-index: 10; pointer-events: none; }
         .mascot-layer img { width: 130px; height: auto; }
-        .island-link { cursor: pointer; z-index: 40; transition: all 0.3s; position: absolute; }
-        .island-link:hover { transform: scale(1.05); }
-        textarea { resize: none; spellcheck: false; }
+        .island-btn { cursor: pointer; z-index: 40; transition: all 0.3s; position: absolute; }
+        .island-btn:hover { transform: scale(1.08); filter: brightness(1.2); }
     </style>
 </head>
 <body class="min-h-screen font-sans flex items-center justify-center">
 
     <div id="app-container" class="w-full flex items-center justify-center p-4">
+        <div class="glass p-10 rounded-[3rem] text-center border-t-4 border-cyan-400">
+            <h1 class="text-5xl font-black mb-8">CODEQUEST</h1>
+            <button onclick="loginWithGoogle()" class="bg-white text-slate-900 px-8 py-4 rounded-2xl font-black hover:scale-105 transition-all">
+                CONTINUE WITH GOOGLE
+            </button>
         </div>
+    </div>
 
     <script>
         // --- FIREBASE CONFIG ---
@@ -38,32 +43,24 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let userData = { mascot: "dragon", chosenLanguage: "JavaScript", currentLevel: 1, coins: 0 };
-
-        // --- THE LESSON DATABASE ---
-        const LESSONS = {
-            1: { title: "The Talking Spell", goal: "console.log('Hello')", hint: "Type console.log('Hello') to speak.", type: "learn" },
-            2: { title: "Energy Boxes", goal: "let power = 10", hint: "Create a variable named 'power' set to 10.", type: "learn" },
-            3: { title: "MEMORY CHALLENGE", goal: "let power = 20", hint: "Recall Level 2: Create a variable 'power' set to 20.", type: "quiz" },
-            4: { title: "Magic Dots", goal: "hero.color = 'blue'", hint: "Access the color property of the hero.", type: "learn" },
-            5: { title: "The Truth Bridge", goal: "bridge.open = true", hint: "Use a boolean (true/false) to open the bridge.", type: "learn" },
-            6: { title: "The Gatekeeper", goal: "if(score > 10)", hint: "Check if the score is greater than 10.", type: "learn" },
-            7: { title: "RECALL QUIZ", goal: "if(energy > 5)", hint: "Recall the 'if' logic to check energy.", type: "quiz" },
-            8: { title: "Bag of Holding", goal: "items = ['Map']", hint: "Create an array (list) with brackets [ ].", type: "learn" },
-            9: { title: "Repeat Ritual", goal: "repeat(3)", hint: "Call the repeat function with the number 3.", type: "learn" },
-            10: { title: "Final Boss", goal: "function win(){}", hint: "Create a function named 'win'.", type: "learn" }
+        let userData = { 
+            mascot: "dragon", 
+            pythonLevel: 1, 
+            cssLevel: 1, 
+            coins: 0,
+            activeLanguage: "" 
         };
 
-        // Initialize App
-        window.onload = () => {
-            document.getElementById('app-container').innerHTML = `
-                <div class="glass p-10 rounded-[3rem] text-center border-t-4 border-cyan-400">
-                    <h1 class="text-5xl font-black mb-8">CODEQUEST</h1>
-                    <button onclick="loginWithGoogle()" class="bg-white text-slate-900 px-8 py-4 rounded-2xl font-black hover:scale-105 transition-all">
-                        CONTINUE WITH GOOGLE
-                    </button>
-                </div>
-            `;
+        // --- LESSON DATA BY LANGUAGE ---
+        const PATHS = {
+            "Python": {
+                1: { title: "Snake Speak", goal: "print('Hello')", hint: "In Python, we use print()." },
+                2: { title: "Python Variables", goal: "energy = 100", hint: "Just name = value." }
+            },
+            "CSS": {
+                1: { title: "Style Shield", goal: "color: blue;", hint: "Use 'color: value;' to change text." },
+                2: { title: "Background Spell", goal: "background: red;", hint: "Use 'background: value;'." }
+            }
         };
 
         function loginWithGoogle() {
@@ -86,35 +83,32 @@
             const container = document.getElementById('app-container');
             container.innerHTML = `
                 <div class="text-center">
-                    <h2 class="text-4xl font-black mb-12 uppercase">Choose Your Partner</h2>
+                    <h2 class="text-4xl font-black mb-12">SELECT YOUR PARTNER</h2>
                     <div class="flex gap-10">
-                        <div onclick="saveMascot('dragon')" class="glass p-8 rounded-[3rem] cursor-pointer hover:border-cyan-400 transition-all">
+                        <div onclick="saveMascot('dragon')" class="glass p-8 rounded-[3rem] cursor-pointer hover:border-cyan-400">
                             <img src="dragon.png" class="w-48 mb-4">
                             <p class="font-black">BRAVE CINDER</p>
                         </div>
-                        <div onclick="saveMascot('unicorn')" class="glass p-8 rounded-[3rem] cursor-pointer hover:border-fuchsia-400 transition-all">
+                        <div onclick="saveMascot('unicorn')" class="glass p-8 rounded-[3rem] cursor-pointer hover:border-fuchsia-400">
                             <img src="unicorn.png" class="w-48 mb-4">
                             <p class="font-black">MAGIC SPARKLE</p>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         function saveMascot(choice) {
             userData.mascot = choice;
             db.collection("users").doc(auth.currentUser.uid).set({
                 mascot: choice,
-                chosenLanguage: "JavaScript",
-                currentLevel: 1,
+                pythonLevel: 1,
+                cssLevel: 1,
                 coins: 0
             }, { merge: true }).then(() => goToMap());
         }
 
         function goToMap() {
             const container = document.getElementById('app-container');
-            const displayLang = userData.chosenLanguage || "JavaScript";
-
             container.innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
@@ -123,67 +117,51 @@
                         <img src="${userData.mascot}.png" class="drop-shadow-2xl">
                     </div>
 
-                    <div onclick="setLanguage('Python')" class="island-link top-[40%] left-[10%] w-[25%] h-[40%] flex items-end justify-center pb-8 group">
-                        <span class="bg-blue-600 px-4 py-1 rounded-lg text-xs font-black uppercase group-hover:scale-110 transition-all shadow-lg">Python Realm</span>
+                    <div onclick="startPath('Python')" class="island-btn top-[40%] left-[10%] w-[25%] h-[40%] flex flex-col items-center justify-end pb-8">
+                        <div class="bg-blue-600 px-6 py-2 rounded-xl border-2 border-blue-400 shadow-lg">
+                            <span class="font-black text-sm uppercase">Enter Python</span>
+                            <p class="text-[9px] opacity-70">Lvl ${userData.pythonLevel || 1}</p>
+                        </div>
                     </div>
 
-                    <div onclick="setLanguage('CSS')" class="island-link top-[40%] right-[10%] w-[25%] h-[40%] flex items-end justify-center pb-8 group">
-                        <span class="bg-pink-600 px-4 py-1 rounded-lg text-xs font-black uppercase group-hover:scale-110 transition-all shadow-lg">Design Realm</span>
-                    </div>
-                    
-                    <div onclick="startLesson()" class="absolute top-[35%] left-1/2 -translate-x-1/2 w-[25%] h-[45%] cursor-pointer z-50">
-                        <div class="mt-28 text-center pointer-events-none">
-                            <p class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">${displayLang}</p>
-                            <p class="text-xl font-black text-white uppercase">LEVEL ${userData.currentLevel}</p>
+                    <div onclick="startPath('CSS')" class="island-btn top-[40%] right-[10%] w-[25%] h-[40%] flex flex-col items-center justify-end pb-8">
+                        <div class="bg-pink-600 px-6 py-2 rounded-xl border-2 border-pink-400 shadow-lg">
+                            <span class="font-black text-sm uppercase">Enter CSS styling</span>
+                            <p class="text-[9px] opacity-70">Lvl ${userData.cssLevel || 1}</p>
                         </div>
                     </div>
 
                     <div class="absolute bottom-0 left-0 w-full h-20 bg-slate-900/90 flex items-center px-12 justify-between border-t border-white/10">
-                        <div class="flex items-center gap-8">
-                            <div class="flex flex-col"><span class="text-[8px] text-slate-500 font-bold uppercase">Active Realm</span><span class="text-lg font-black text-cyan-400">${displayLang}</span></div>
-                            <div class="flex flex-col"><span class="text-[8px] text-slate-500 font-bold uppercase">Coins</span><span class="text-lg font-black text-yellow-400">🟡 ${userData.coins || 0}</span></div>
+                        <div class="flex gap-10">
+                            <div class="flex flex-col"><span class="text-[8px] text-slate-500 uppercase">Total Coins</span><span class="text-xl font-black text-yellow-400">🟡 ${userData.coins || 0}</span></div>
                         </div>
-                        <p class="text-xs italic text-slate-400">Click the center island to start your quest!</p>
+                        <p class="text-xs italic text-slate-400 uppercase tracking-widest">Select an island to begin learning</p>
                     </div>
                 </div>
             `;
         }
 
-        function setLanguage(lang) {
-            userData.chosenLanguage = lang;
-            db.collection("users").doc(auth.currentUser.uid).update({ chosenLanguage: lang }).then(() => goToMap());
-        }
-
-        // --- LESSON SCREEN LOGIC ---
-        function startLesson() {
-            const container = document.getElementById('app-container');
-            const lesson = LESSONS[userData.currentLevel] || LESSONS[1];
+        function startPath(lang) {
+            userData.activeLanguage = lang;
+            const level = (lang === 'Python') ? userData.pythonLevel : userData.cssLevel;
+            const lesson = PATHS[lang][level] || PATHS[lang][1];
             
+            const container = document.getElementById('app-container');
             container.innerHTML = `
-                <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 ${lesson.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'}">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h2 class="text-3xl font-black ${lesson.type === 'quiz' ? 'text-red-400' : 'text-cyan-400'} uppercase">LEVEL ${userData.currentLevel}: ${lesson.title}</h2>
-                            <p class="text-slate-400 italic text-sm mt-1">${lesson.hint}</p>
-                        </div>
-                        <img src="${userData.mascot}.png" class="w-20 drop-shadow-lg">
+                <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 ${lang === 'Python' ? 'border-blue-500' : 'border-pink-500'}">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-3xl font-black uppercase">${lang} Level ${level}: ${lesson.title}</h2>
+                        <button onclick="goToMap()" class="text-xs font-bold text-slate-500 hover:text-white uppercase tracking-widest">Back to Map</button>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-4">
-                            <div class="bg-black/80 rounded-2xl p-4 border border-white/10">
-                                <textarea id="codeEditor" class="w-full h-40 bg-transparent text-cyan-400 font-mono text-lg outline-none" placeholder="// Type your code here..."></textarea>
-                            </div>
-                            <button onclick="validateCode()" class="w-full bg-cyan-500 text-slate-900 font-black py-4 rounded-xl uppercase hover:bg-cyan-400 transition-all">Execute Spell</button>
-                            <button onclick="goToMap()" class="w-full text-slate-500 font-bold text-xs uppercase tracking-widest">Return to Map</button>
+                            <textarea id="codeEditor" class="w-full h-40 bg-black/80 p-6 text-cyan-400 font-mono text-lg rounded-2xl outline-none border border-white/10" placeholder="# Type ${lang} here..."></textarea>
+                            <button onclick="validateCode()" class="w-full bg-white text-slate-900 font-black py-4 rounded-xl uppercase hover:scale-105 transition-all">Submit Solution</button>
                         </div>
-
-                        <div class="bg-white/5 rounded-[2rem] p-8 flex flex-col justify-center items-center text-center">
-                            <h3 class="text-xs font-black text-slate-500 uppercase mb-4 tracking-widest">Target Code:</h3>
-                            ${lesson.type === 'quiz' ? 
-                                `<p class="text-xl text-red-400 font-black italic">RECALL FROM MEMORY!</p>` : 
-                                `<code class="text-2xl font-black text-white px-4 py-2 bg-white/5 rounded-lg">${lesson.goal}</code>`
-                            }
+                        <div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center border border-white/5">
+                            <p class="text-slate-400 text-xs mb-4 uppercase tracking-widest">Your Goal:</p>
+                            <code class="text-2xl font-black text-white">${lesson.goal}</code>
+                            <p class="mt-6 text-sm italic text-slate-500">${lesson.hint}</p>
                         </div>
                     </div>
                 </div>
@@ -192,28 +170,30 @@
 
         function validateCode() {
             const input = document.getElementById('codeEditor').value.trim().replace(/\s/g, "");
-            const goal = LESSONS[userData.currentLevel].goal.replace(/\s/g, "");
+            const lang = userData.activeLanguage;
+            const level = (lang === 'Python') ? userData.pythonLevel : userData.cssLevel;
+            const goal = PATHS[lang][level].goal.replace(/\s/g, "");
 
             if (input === goal || input === goal + ";") {
-                alert("Quest Complete! +100 Coins");
-                updateUserProgress();
+                alert("Correct! Level Up!");
+                updateProgress(lang);
             } else {
-                alert("The spell failed! Check your syntax.");
+                alert("Incorrect syntax. Try again!");
             }
         }
 
-        function updateUserProgress() {
-            const nextLevel = userData.currentLevel + 1;
-            const newCoins = (userData.coins || 0) + 100;
+        function updateProgress(lang) {
+            const uid = auth.currentUser.uid;
+            if (lang === 'Python') userData.pythonLevel++;
+            else userData.cssLevel++;
             
-            db.collection("users").doc(auth.currentUser.uid).update({
-                currentLevel: nextLevel,
-                coins: newCoins
-            }).then(() => {
-                userData.currentLevel = nextLevel;
-                userData.coins = newCoins;
-                goToMap();
-            });
+            userData.coins += 100;
+
+            db.collection("users").doc(uid).update({
+                pythonLevel: userData.pythonLevel,
+                cssLevel: userData.cssLevel,
+                coins: userData.coins
+            }).then(() => goToMap());
         }
     </script>
 </body>
