@@ -9,18 +9,18 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #0f172a; overflow-x: hidden; }
+        body { background: #0f172a; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
         .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.5); }
+        .code-input { font-family: 'Courier New', Courier, monospace; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center font-sans">
 
     <div id="app-container" class="w-full flex items-center justify-center p-4">
-        <div class="glass p-8 rounded-[2.5rem] shadow-2xl max-w-md mx-auto w-full">
-            <h1 class="text-5xl font-black text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
-            <p class="text-center text-slate-300 mb-8 font-medium">Your neon coding adventure awaits!</p>
-            
+        <div class="glass p-8 rounded-[2.5rem] shadow-2xl max-w-md mx-auto w-full text-center">
+            <h1 class="text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
+            <p class="text-slate-300 mb-8 font-medium">Your neon coding adventure awaits!</p>
             <button onclick="loginWithGoogle()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                 <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-6 h-6">
                 CONTINUE WITH GOOGLE
@@ -29,7 +29,6 @@
     </div>
 
     <script>
-        // --- YOUR SECURE CONFIG ---
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
           authDomain: "codequest-c1da5.firebaseapp.com",
@@ -45,21 +44,17 @@
         const db = firebase.firestore();
 
         let selectedMascot = ""; 
+        let selectedLanguage = "";
 
-        // --- STEP 1: LOGIN ---
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then(() => {
-                goToMascotSelection();
-            }).catch((e) => alert(e.message));
+            auth.signInWithPopup(provider).then(() => goToMascotSelection()).catch((e) => alert(e.message));
         }
 
-        // --- STEP 2: CHOOSE HERO ---
         function goToMascotSelection() {
             const container = document.getElementById('app-container');
-            container.className = "w-full max-w-4xl p-6";
             container.innerHTML = `
-                <div class="text-center">
+                <div class="text-center w-full max-w-4xl">
                     <h2 class="text-4xl font-black text-white mb-8 tracking-tight">CHOOSE YOUR HERO</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div onclick="selectHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all">
@@ -80,16 +75,13 @@
             goToLanguageSelection();
         }
 
-        // --- STEP 3: CHOOSE LANGUAGE ---
         function goToLanguageSelection() {
             const container = document.getElementById('app-container');
             const heroColor = selectedMascot === 'dragon' ? 'text-cyan-400' : 'text-fuchsia-400';
-            
             container.innerHTML = `
-                <div class="text-center max-w-lg mx-auto">
+                <div class="text-center max-w-lg mx-auto w-full">
                     <h2 class="text-4xl font-black text-white mb-4">PICK A QUEST</h2>
                     <p class="text-slate-300 mb-8 font-bold italic">Hero: <span class="${heroColor} uppercase text-2xl">${selectedMascot}</span></p>
-                    
                     <div class="space-y-4">
                         <button onclick="finalSave('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">JAVASCRIPT</button>
                         <button onclick="finalSave('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">PYTHON</button>
@@ -99,45 +91,79 @@
             `;
         }
 
-        // --- STEP 4: SAVE & SHOW MAP ---
         function finalSave(lang) {
+            selectedLanguage = lang;
             const user = auth.currentUser;
             if (user) {
                 db.collection("users").doc(user.uid).set({
                     mascot: selectedMascot,
                     chosenLanguage: lang,
                     setupComplete: true
-                }, { merge: true }).then(() => {
-                    goToMap();
-                });
+                }, { merge: true }).then(() => goToMap());
             }
         }
 
         function goToMap() {
             const container = document.getElementById('app-container');
-            // Changed layout to min-h-screen to ensure the map sits in the middle
             container.className = "w-full min-h-screen flex items-center justify-center p-4";
             container.innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
-                    
                     <div class="absolute top-6 left-6 glass px-6 py-2 rounded-full">
                         <p class="text-white font-black tracking-widest text-sm md:text-base neon-text uppercase">Level 1: The Neon Coast</p>
                     </div>
-
-                    <button onclick="location.reload()" class="absolute top-6 right-6 glass px-4 py-2 rounded-full text-white/50 hover:text-white text-xs font-bold transition-colors">
-                        RESTART QUEST
-                    </button>
-
                     <div class="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                        <div class="w-16 h-16 bg-cyan-400 rounded-full animate-bounce shadow-[0_0_20px_rgba(34,211,238,1)] flex items-center justify-center cursor-pointer">
-                            <span class="text-2xl">⭐</span>
+                        <div onclick="startLesson1()" class="w-20 h-20 bg-cyan-400 rounded-full animate-bounce shadow-[0_0_30px_rgba(34,211,238,1)] flex items-center justify-center cursor-pointer border-4 border-white">
+                            <span class="text-3xl">⭐</span>
                         </div>
-                        <p class="text-white font-bold mt-2 neon-text">START LESSON 1</p>
+                        <p class="text-white font-black mt-4 neon-text tracking-tighter">START QUEST 1</p>
                     </div>
-
                 </div>
             `;
+        }
+
+        function startLesson1() {
+            const container = document.getElementById('app-container');
+            container.innerHTML = `
+                <div class="glass p-8 rounded-[2.5rem] w-full max-w-2xl shadow-2xl flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-1/3">
+                        <img src="${selectedMascot}.png" class="w-full drop-shadow-2xl animate-pulse">
+                    </div>
+                    <div class="flex-1 text-white">
+                        <h2 class="text-2xl font-black text-cyan-400 mb-2 uppercase">The Talking Crystal</h2>
+                        <p class="text-slate-300 mb-6 font-medium">Use the <span class="text-yellow-400 font-mono">console.log</span> magic spell to make the crystal say "Hello!"</p>
+                        
+                        <div class="bg-black/50 p-6 rounded-2xl mb-4 border border-white/10">
+                            <div class="flex gap-2 items-center mb-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                <span class="text-xs text-slate-500 ml-2 font-mono uppercase tracking-widest">Magic-Editor.js</span>
+                            </div>
+                            <code class="text-pink-400 font-mono">console.log("<input id="codeInput" type="text" placeholder="..." class="bg-transparent border-b-2 border-cyan-400 outline-none text-white w-24 px-1">");</code>
+                        </div>
+                        
+                        <button onclick="checkCode()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-black py-4 rounded-xl transition-all uppercase tracking-widest">Cast Spell</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkCode() {
+            const val = document.getElementById('codeInput').value.trim().toLowerCase();
+            if (val === "hello" || val === "hello!") {
+                const container = document.getElementById('app-container');
+                container.innerHTML = `
+                    <div class="text-center animate-bounce">
+                        <h1 class="text-9xl mb-4">💎</h1>
+                        <h2 class="text-5xl font-black text-white neon-text uppercase">IT WORKED!</h2>
+                        <p class="text-cyan-400 font-bold mt-4 text-2xl">The crystal says: "HELLO WORLD!"</p>
+                        <button onclick="goToMap()" class="mt-8 bg-white text-slate-900 px-10 py-4 rounded-2xl font-black">BACK TO MAP</button>
+                    </div>
+                `;
+            } else {
+                alert("Almost! Try typing 'Hello' in the box.");
+            }
         }
     </script>
 </body>
