@@ -9,18 +9,18 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
-<body class="min-h-screen bg-sky-400 flex items-center justify-center font-sans">
+<body class="min-h-screen bg-sky-400 flex items-center justify-center font-sans text-slate-800">
 
     <div id="app-container" class="w-full max-w-md p-6">
-        <div class="bg-white p-8 rounded-[2rem] shadow-2xl text-slate-800">
+        <div class="bg-white p-8 rounded-[2rem] shadow-2xl">
             <h1 class="text-4xl font-black text-center mb-2 text-sky-600">CodeQuest</h1>
             <p class="text-center text-slate-500 mb-8 font-semibold">Begin your coding adventure!</p>
             
             <div class="space-y-4">
-                <input type="email" id="email" placeholder="Parent's Email" class="w-full p-4 bg-slate-100 rounded-2xl border-none outline-none focus:ring-2 focus:ring-sky-400">
-                <input type="password" id="password" placeholder="Create Password" class="w-full p-4 bg-slate-100 rounded-2xl border-none outline-none focus:ring-2 focus:ring-sky-400">
+                <input type="email" id="email" placeholder="Parent's Email" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-sky-400">
+                <input type="password" id="password" placeholder="Create Password" class="w-full p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-sky-400">
                 
-                <button onclick="handleEmailSignup()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-2xl transition-all shadow-lg">
+                <button onclick="alert('Try Google Login for now!')" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-2xl shadow-lg">
                     START MY QUEST!
                 </button>
 
@@ -30,7 +30,7 @@
                     <div class="flex-grow border-t border-slate-200"></div>
                 </div>
 
-                <button onclick="loginWithGoogle()" class="w-full bg-white border-2 border-slate-200 text-slate-700 font-bold py-3 rounded-2xl flex items-center justify-center gap-2 hover:bg-slate-50 transition-all">
+                <button onclick="loginWithGoogle()" class="w-full bg-white border-2 border-slate-200 text-slate-700 font-bold py-3 rounded-2xl flex items-center justify-center gap-2 hover:bg-slate-50">
                     <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-5 h-5">
                     Continue with Google
                 </button>
@@ -39,7 +39,6 @@
     </div>
 
     <script>
-        // YOUR REAL FIREBASE CONFIG IS NOW HERE
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
           authDomain: "codequest-c1da5.firebaseapp.com",
@@ -50,44 +49,51 @@
           measurementId: "G-4C6PC61SK7"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Google Login Logic
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider)
                 .then((result) => {
-                    console.log("Logged in!", result.user);
                     goToMascotSelection();
                 })
                 .catch((error) => {
-                    alert("Google Login Error: " + error.message);
+                    alert("Login Error: " + error.message);
                 });
         }
 
-        // Basic function to move to mascot selection screen
         function goToMascotSelection() {
             const container = document.getElementById('app-container');
             container.innerHTML = `
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold text-white mb-8 text-shadow">Choose Your Hero</h2>
+                    <h2 class="text-3xl font-bold text-white mb-8">Choose Your Hero</h2>
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-white p-6 rounded-3xl shadow-xl cursor-pointer hover:scale-105 transition-all">
-                            <div class="text-6xl mb-2">🐲</div>
-                            <p class="font-bold text-slate-700">Brave Dragon</p>
+                        <div onclick="saveMascot('dragon')" class="bg-white p-4 rounded-3xl shadow-xl cursor-pointer hover:scale-105 transition-all">
+                            <img src="dragon.png" class="w-full rounded-2xl mb-2">
+                            <p class="font-bold">Brave Cinder</p>
                         </div>
-                        <div class="bg-white p-6 rounded-3xl shadow-xl cursor-pointer hover:scale-105 transition-all">
-                            <div class="text-6xl mb-2">🦄</div>
-                            <p class="font-bold text-slate-700">Magic Unicorn</p>
+                        <div onclick="saveMascot('unicorn')" class="bg-white p-4 rounded-3xl shadow-xl cursor-pointer hover:scale-105 transition-all">
+                            <img src="unicorn.png" class="w-full rounded-2xl mb-2">
+                            <p class="font-bold">Magic Sparkle</p>
                         </div>
                     </div>
                 </div>
             `;
         }
+
+        function saveMascot(type) {
+            const user = auth.currentUser;
+            if (user) {
+                db.collection("users").doc(user.uid).set({
+                    mascot: type,
+                    setupComplete: true
+                }, { merge: true }).then(() => {
+                    alert("Hero saved! Adventure starts next!");
+                });
+            }
+        }
     </script>
 </body>
 </html>
-
