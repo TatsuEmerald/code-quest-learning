@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Step 8 Clarity</title>
+    <title>CodeQuest: Navigator Mode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -24,6 +24,21 @@
             z-index: 5;
             pointer-events: none;
         }
+        
+        /* Navigation Button Styling */
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .nav-btn:hover { background: rgba(34, 211, 238, 0.3); border-color: cyan; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center font-sans">
@@ -55,20 +70,18 @@
         const db = firebase.firestore();
 
         let userData = { mascot: "", language: "", currentLevel: 1, coins: 0 };
+        let viewingLevel = 1; // Tracks which level we are currently looking at on the map
 
         const LESSON_DATA = {
-            // CHAPTER 1
             1: { chapter: 1, title: "Step 1: The Message", goal: "Hello World", type: "learn", hint: "Just type the message: Hello World" },
             2: { chapter: 1, title: "Step 2: The Quotes", goal: "\"Hello World\"", type: "learn", hint: "Add double quotes around your message." },
             3: { chapter: 1, title: "Step 3: The Shield", goal: "(\"Hello World\")", type: "learn", hint: "Place your quoted message inside parentheses ( )." },
             4: { chapter: 1, title: "Step 4: The Voice", goal: "console.log(\"Hello World\")", type: "learn", hint: "Add 'console.log' to speak your code!" },
             5: { chapter: 1, title: "CHAPTER 1 EXAM", goal: "console.log(\"Hello World\")", type: "quiz", hint: "RECALL: Full command to speak 'Hello World'!" },
-            
-            // CHAPTER 2: THE ENERGY BOX
             6: { chapter: 2, title: "Step 5: The Value", goal: "10", type: "learn", hint: "Just type the number 10. Numbers don't need quotes!" },
             7: { chapter: 2, title: "Step 6: The Name", goal: "power = 10", type: "learn", hint: "Give your number a name using the equals sign." },
             8: { chapter: 2, title: "Step 7: The Box", goal: "let power = 10", type: "learn", hint: "Use 'let' to create a new variable box." },
-            9: { chapter: 2, title: "Step 8: Peeking Inside", goal: "console.log(power)", type: "learn", hint: "To see what is inside the 'power' box, type: console.log(power). Notice: NO QUOTES around the name!" },
+            9: { chapter: 2, title: "Step 8: Peeking Inside", goal: "console.log(power)", type: "learn", hint: "To see inside 'power', type: console.log(power). NO QUOTES!" },
             10: { chapter: 2, title: "CHAPTER 2 EXAM", goal: "let power = 10", type: "quiz", hint: "RECALL: Create a variable called 'power' set to 10." }
         };
 
@@ -81,6 +94,7 @@
             db.collection("users").doc(uid).get().then((doc) => {
                 if (doc.exists && doc.data().setupComplete) {
                     userData = doc.data();
+                    viewingLevel = userData.currentLevel; // Set map view to highest reached
                     goToMap();
                 } else {
                     goToMascotSelection();
@@ -122,6 +136,7 @@
         function finalSave(lang) {
             userData.language = lang;
             userData.currentLevel = 1;
+            viewingLevel = 1;
             const user = auth.currentUser;
             if (user) {
                 db.collection("users").doc(user.uid).set({
@@ -134,31 +149,58 @@
             }
         }
 
+        function changeMapView(direction) {
+            const newLevel = viewingLevel + direction;
+            if (newLevel >= 1 && newLevel <= userData.currentLevel) {
+                viewingLevel = newLevel;
+                goToMap();
+            }
+        }
+
         function goToMap() {
             const container = document.getElementById('app-container');
             container.className = "w-full min-h-screen flex items-center justify-center p-4";
-            const lesson = LESSON_DATA[userData.currentLevel] || { title: "QUEST COMPLETE", chapter: "End" };
+            const lesson = LESSON_DATA[viewingLevel] || { title: "QUEST COMPLETE", chapter: "End" };
             
+            // Logic to show/hide navigation arrows
+            const showBack = viewingLevel > 1;
+            const showForward = viewingLevel < userData.currentLevel;
+
             container.innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
+                    
                     <img src="${userData.mascot}.png" class="mascot-on-map drop-shadow-2xl">
+
+                    <div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between items-center z-30 pointer-events-none">
+                        <button onclick="changeMapView(-1)" class="nav-btn pointer-events-auto ${showBack ? 'opacity-100' : 'opacity-0 pointer-events-none'}">
+                            <span class="text-2xl">⬅️</span>
+                        </button>
+                        <button onclick="changeMapView(1)" class="nav-btn pointer-events-auto ${showForward ? 'opacity-100' : 'opacity-0 pointer-events-none'}">
+                            <span class="text-2xl">➡️</span>
+                        </button>
+                    </div>
+
                     <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 border-t border-white/10 flex items-center px-12 justify-between z-20">
                         <div class="flex items-center gap-8">
                             <div class="w-16 h-16 bg-cyan-500/20 rounded-full border-2 border-cyan-400 overflow-hidden"><img src="${userData.mascot}.png" class="w-full h-full object-contain"></div>
                             <div class="flex flex-col">
                                 <span class="text-[10px] text-slate-500 font-black uppercase tracking-widest">Chapter ${lesson.chapter || ''}</span>
-                                <span class="text-2xl font-black text-white">Lvl ${userData.currentLevel}</span>
+                                <span class="text-2xl font-black text-white">Lvl ${viewingLevel}</span>
                             </div>
-                            <div class="flex items-center gap-2 ml-4"><span class="text-2xl">🟡</span><span class="text-2xl font-black text-yellow-400">${userData.coins || 0}</span></div>
+                            <div class="flex items-center gap-2 ml-4"><span class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</span></div>
                         </div>
-                        <button onclick="startCurrentLesson()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg hover:scale-105 shadow-[0_0_20px_cyan]">
-                            ENTER LEVEL ${userData.currentLevel}
-                        </button>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[10px] text-cyan-400 font-black uppercase mb-1">${viewingLevel < userData.currentLevel ? 'Reviewing Old Skill' : 'Current Mission'}</span>
+                            <button onclick="startCurrentLesson()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg hover:scale-105 shadow-[0_0_20px_cyan]">
+                                ${viewingLevel < userData.currentLevel ? 'REVIEW LEVEL' : 'ENTER LEVEL'} ${viewingLevel}
+                            </button>
+                        </div>
                     </div>
+
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-20">
-                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_40px_cyan] flex items-center justify-center">
-                            <span class="text-4xl font-black text-white">${userData.currentLevel}</span>
+                        <div class="w-24 h-24 ${viewingLevel < userData.currentLevel ? 'bg-slate-500' : 'bg-cyan-500'} rounded-full animate-bounce border-4 border-white shadow-[0_0_40px_cyan] flex items-center justify-center">
+                            <span class="text-4xl font-black text-white">${viewingLevel}</span>
                         </div>
                         <p class="text-white font-black mt-4 neon-text tracking-widest uppercase">${lesson.title}</p>
                     </div>
@@ -166,7 +208,7 @@
         }
 
         function startCurrentLesson() {
-            const lesson = LESSON_DATA[userData.currentLevel];
+            const lesson = LESSON_DATA[viewingLevel];
             const container = document.getElementById('app-container');
             container.innerHTML = `
                 <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 ${lesson.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'} relative z-50">
@@ -184,6 +226,7 @@
                                 <textarea id="fullEditor" class="w-full h-40 bg-transparent py-4 text-cyan-300 code-font text-lg outline-none" placeholder="// Type here..."></textarea>
                             </div>
                             <button onclick="validateLesson()" class="w-full ${lesson.type === 'quiz' ? 'bg-red-500' : 'bg-cyan-500'} text-slate-900 font-black py-4 rounded-2xl shadow-lg uppercase tracking-widest">Execute Script</button>
+                            <button onclick="goToMap()" class="w-full text-slate-500 text-xs font-black uppercase">Back to Map</button>
                         </div>
                         <div class="bg-white/5 rounded-[2rem] p-8 border border-white/10 text-center flex flex-col justify-center">
                             <h3 class="text-xs font-black text-slate-500 mb-4 uppercase">Task Goal:</h3>
@@ -195,11 +238,17 @@
 
         function validateLesson() {
             const input = document.getElementById('fullEditor').value.trim().replace(/\s/g, "");
-            const goal = LESSON_DATA[userData.currentLevel].goal.replace(/\s/g, "");
+            const goal = LESSON_DATA[viewingLevel].goal.replace(/\s/g, "");
             if (input === goal) {
-                updateProgress(userData.currentLevel + 1, 100);
+                // Only increment permanent progress if they were on their current "True Progress" level
+                if (viewingLevel === userData.currentLevel) {
+                    updateProgress(userData.currentLevel + 1, 100);
+                } else {
+                    alert("Review Complete! Returning to Map.");
+                    goToMap();
+                }
             } else {
-                alert("Incorrect. Double check your typing! (Remember: No quotes for the variable name inside console.log)");
+                alert("Incorrect. Double check your typing!");
             }
         }
 
@@ -211,6 +260,7 @@
                     coins: firebase.firestore.FieldValue.increment(coins)
                 }).then(() => {
                     userData.currentLevel = nextLvl;
+                    viewingLevel = nextLvl; // Advance view to the new level
                     userData.coins = (userData.coins || 0) + coins;
                     showSuccess();
                 });
@@ -223,7 +273,6 @@
                 <div class="text-center animate-bounce relative z-50">
                     <h1 class="text-9xl mb-6">🧠</h1>
                     <h2 class="text-5xl font-black text-white neon-text uppercase tracking-tighter">CHAPTER STEP COMPLETE!</h2>
-                    <p class="text-cyan-400 font-bold text-lg mt-4 italic max-w-lg mx-auto leading-relaxed">Quotes are for real words. Variable names (like power) are just labels for boxes, so they never use quotes!</p>
                     <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl">CONTINUE QUEST</button>
                 </div>`;
         }
