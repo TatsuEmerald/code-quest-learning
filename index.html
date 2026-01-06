@@ -14,6 +14,7 @@
         .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.5); }
         .code-font { font-family: 'Fira Code', 'Courier New', monospace; }
         textarea { resize: none; spellcheck: false; }
+        .hero-preview { transition: filter 0.5s ease; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center font-sans">
@@ -21,7 +22,7 @@
     <div id="app-container" class="w-full flex items-center justify-center p-4">
         <div class="glass p-8 rounded-[2.5rem] shadow-2xl max-w-md mx-auto w-full text-center border-t-4 border-cyan-400">
             <h1 class="text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
-            <p class="text-slate-300 mb-8 font-medium">Step into the Programmer's Lab.</p>
+            <p class="text-slate-300 mb-8 font-medium">Professional Coding for Future Masters.</p>
             <button onclick="loginWithGoogle()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                 <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-6 h-6">
                 CONTINUE WITH GOOGLE
@@ -56,7 +57,7 @@
             const container = document.getElementById('app-container');
             container.innerHTML = `
                 <div class="text-center w-full max-w-4xl">
-                    <h2 class="text-4xl font-black text-white mb-8 tracking-tight">CHOOSE YOUR PARTNER</h2>
+                    <h2 class="text-4xl font-black text-white mb-8 tracking-tight uppercase">Select Your Avatar</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div onclick="selectHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 transition-all group">
                             <img src="dragon.png" class="w-64 mx-auto mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform">
@@ -81,12 +82,12 @@
             const heroColor = selectedMascot === 'dragon' ? 'text-cyan-400' : 'text-fuchsia-400';
             container.innerHTML = `
                 <div class="text-center max-w-lg mx-auto w-full">
-                    <h2 class="text-4xl font-black text-white mb-4">PICK YOUR LANGUAGE</h2>
-                    <p class="text-slate-400 mb-8 font-bold italic">Current Hero: <span class="${heroColor}">${selectedMascot}</span></p>
+                    <h2 class="text-4xl font-black text-white mb-4 uppercase">Choose Your Quest</h2>
+                    <p class="text-slate-400 mb-8 font-bold italic">Partner: <span class="${heroColor}">${selectedMascot}</span></p>
                     <div class="space-y-4">
-                        <button onclick="finalSave('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">JAVASCRIPT (Full Control)</button>
-                        <button onclick="finalSave('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">PYTHON (Data & AI)</button>
-                        <button onclick="finalSave('CSS')" class="w-full bg-pink-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">CSS (Visual Arts)</button>
+                        <button onclick="finalSave('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">JAVASCRIPT</button>
+                        <button onclick="finalSave('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">PYTHON</button>
+                        <button onclick="finalSave('CSS')" class="w-full bg-pink-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">CSS DESIGN</button>
                     </div>
                 </div>
             `;
@@ -111,33 +112,32 @@
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
                     
-                    <div class="absolute top-6 left-6 glass px-6 py-2 rounded-full">
-                        <p class="text-white font-black text-sm neon-text uppercase tracking-widest">MAP: NEON COAST</p>
-                    </div>
+                    <div class="absolute top-6 left-6 glass px-6 py-2 rounded-full"><p class="text-white font-black text-xs neon-text uppercase tracking-widest">MAP: NEON COAST</p></div>
 
-                    <div class="absolute bottom-24 left-1/4 flex flex-col items-center opacity-50"><div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center"><span class="text-xs">✅</span></div></div>
-                    <div class="absolute bottom-40 left-1/3 flex flex-col items-center opacity-50"><div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center"><span class="text-xs">✅</span></div></div>
+                    <div class="absolute bottom-24 left-1/4 opacity-40"><div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center"><span class="text-[10px]">✅</span></div></div>
+                    <div class="absolute bottom-40 left-1/3 opacity-40"><div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center"><span class="text-[10px]">✅</span></div></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40"><div class="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center"><span class="text-[10px]">✅</span></div></div>
 
-                    <div onclick="startLesson3()" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group">
-                        <div class="w-24 h-24 bg-fuchsia-500 rounded-full animate-bounce flex items-center justify-center border-4 border-white shadow-[0_0_40px_#f472b6]">
-                            <span class="text-4xl">🏰</span>
+                    <div onclick="startLesson4()" class="absolute top-1/4 right-1/4 flex flex-col items-center cursor-pointer group">
+                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce flex items-center justify-center border-4 border-white shadow-[0_0_40px_rgba(34,211,238,0.8)]">
+                            <span class="text-4xl">🎨</span>
                         </div>
-                        <p class="text-white font-black mt-4 neon-text uppercase tracking-widest text-xl">The Syntax Tower</p>
+                        <p class="text-white font-black mt-4 neon-text uppercase tracking-widest text-xl">Property Painter</p>
                     </div>
                 </div>
             `;
         }
 
-        function startLesson3() {
+        function startLesson4() {
             const container = document.getElementById('app-container');
             container.innerHTML = `
-                <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 border-fuchsia-500">
+                <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 border-cyan-500">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h2 class="text-3xl font-black text-fuchsia-400 uppercase tracking-tighter">Level 3: Building a Function</h2>
-                            <p class="text-slate-300 text-sm mt-1">Functions are actions. You must type the action name, the <span class="text-yellow-400 font-bold">()</span> to start it, and <span class="text-cyan-400 font-bold">""</span> for words.</p>
+                            <h2 class="text-3xl font-black text-cyan-400 uppercase tracking-tighter">Level 4: Changing Properties</h2>
+                            <p class="text-slate-300 text-sm mt-1">Use a <span class="text-yellow-400 font-bold">dot .</span> to reach inside an object and change it!</p>
                         </div>
-                        <img src="${selectedMascot}.png" class="w-24 drop-shadow-xl">
+                        <img id="heroTarget" src="${selectedMascot}.png" class="w-24 hero-preview drop-shadow-xl">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -148,49 +148,54 @@
                                     <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                                     <div class="w-3 h-3 rounded-full bg-green-500"></div>
                                 </div>
-                                <textarea id="fullEditor" class="w-full h-48 bg-transparent p-6 text-fuchsia-300 code-font outline-none leading-relaxed" placeholder="// Type your code here..."></textarea>
+                                <textarea id="fullEditor" class="w-full h-48 bg-transparent p-6 text-cyan-300 code-font outline-none leading-relaxed" placeholder="// Type your code here..."></textarea>
                             </div>
-                            <button onclick="validateLesson3()" class="w-full bg-fuchsia-500 hover:bg-fuchsia-400 text-white font-black py-4 rounded-2xl shadow-lg transition-all uppercase tracking-widest">Run Code</button>
+                            <button onclick="validateLesson4()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl shadow-lg transition-all uppercase tracking-widest">Run Code</button>
                         </div>
 
                         <div class="bg-white/5 rounded-3xl p-6 border border-white/5">
-                            <h3 class="text-xs font-black text-slate-500 mb-4 uppercase">Quest Instructions:</h3>
+                            <h3 class="text-xs font-black text-slate-500 mb-4 uppercase">Task: Change Hero Color</h3>
                             <ul class="text-sm text-slate-300 space-y-3">
-                                <li>1. Type <span class="text-fuchsia-400 font-mono">alert</span> to call the popup magic.</li>
-                                <li>2. Add <span class="text-yellow-400 font-mono">()</span> parentheses immediately after.</li>
-                                <li>3. Inside those, put quotes <span class="text-cyan-400 font-mono">" "</span>.</li>
-                                <li>4. Type <span class="text-white italic">Level Up</span> inside the quotes.</li>
+                                <li>1. Type <span class="text-cyan-400 font-mono">hero</span> to select your partner.</li>
+                                <li>2. Type a <span class="text-yellow-400 font-mono">.</span> (dot) to access their skills.</li>
+                                <li>3. Type <span class="text-cyan-400 font-mono">color</span> to choose the property.</li>
+                                <li>4. Type <span class="text-white font-mono">= "neon"</span> to set the value.</li>
                             </ul>
-                            <p class="mt-6 text-[10px] text-slate-500 font-mono italic">Goal: alert("Level Up")</p>
+                            <p class="mt-6 text-[10px] text-slate-500 font-mono italic">Goal: hero.color = "neon"</p>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function validateLesson3() {
+        function validateLesson4() {
             const code = document.getElementById('fullEditor').value.trim();
+            const target = document.getElementById('heroTarget');
             
-            // Step-by-step logic check
-            if (!code.startsWith('alert')) {
-                alert("❌ ERROR: You didn't start with the 'alert' command.");
-            } else if (!code.includes('(') || !code.includes(')')) {
-                alert("❌ SYNTAX ERROR: You forgot the () parentheses. These tell the computer to 'DO' the action.");
-            } else if (!code.includes('"') && !code.includes("'")) {
-                alert("❌ QUOTE ERROR: Words need to be inside \"quotes\" so the computer knows they are text strings.");
-            } else if (code.toLowerCase() === 'alert("level up")' || code.toLowerCase() === 'alert("level up");') {
-                const container = document.getElementById('app-container');
-                container.innerHTML = `
-                    <div class="text-center">
-                        <div class="text-9xl mb-6">🏆</div>
-                        <h2 class="text-6xl font-black text-white neon-text uppercase italic">Perfect Syntax!</h2>
-                        <p class="text-fuchsia-400 font-bold text-xl mt-4">You just wrote a real JavaScript Function Call.</p>
-                        <p class="text-slate-400 mt-2">You used parentheses, quotes, and keywords correctly.</p>
-                        <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl hover:scale-105 transition-all">CONTINUE QUEST</button>
-                    </div>
-                `;
+            if (!code.startsWith('hero')) {
+                alert("❌ ERROR: You must select the 'hero' first.");
+            } else if (!code.includes('.')) {
+                alert("❌ DOT ERROR: Use a '.' to unlock the property you want to change.");
+            } else if (!code.includes('color')) {
+                alert("❌ PROPERTY ERROR: You need to tell the computer which property to change (color).");
+            } else if (!code.includes('=')) {
+                alert("❌ EQUALS ERROR: Use the '=' sign to 'set' the new value.");
+            } else if (code.toLowerCase() === 'hero.color = "neon"' || code.toLowerCase() === 'hero.color = "neon";') {
+                target.style.filter = "hue-rotate(180deg) brightness(1.5) drop-shadow(0 0 15px cyan)";
+                setTimeout(() => {
+                    const container = document.getElementById('app-container');
+                    container.innerHTML = `
+                        <div class="text-center">
+                            <div class="text-9xl mb-6">🎭</div>
+                            <h2 class="text-6xl font-black text-white neon-text uppercase italic">Object Mastered!</h2>
+                            <p class="text-cyan-400 font-bold text-xl mt-4">You successfully updated a Property.</p>
+                            <p class="text-slate-400 mt-2 italic">In JavaScript, Dot Notation is how we control everything.</p>
+                            <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl hover:scale-105 transition-all">CONTINUE QUEST</button>
+                        </div>
+                    `;
+                }, 1500);
             } else {
-                alert("Close! Check your spelling. It should be: alert(\"Level Up\")");
+                alert("Check your syntax! It should be: hero.color = \"neon\"");
             }
         }
     </script>
