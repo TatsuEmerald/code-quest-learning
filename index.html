@@ -12,11 +12,8 @@
         body { background: #0f172a; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
         .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.5); }
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 5px #22d3ee; }
-            100% { box-shadow: 0 0 25px #22d3ee; }
-        }
-        .variable-box { animation: pulse-glow 2s infinite alternate; }
+        .code-font { font-family: 'Fira Code', 'Courier New', monospace; }
+        textarea { resize: none; spellcheck: false; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center font-sans">
@@ -24,7 +21,7 @@
     <div id="app-container" class="w-full flex items-center justify-center p-4">
         <div class="glass p-8 rounded-[2.5rem] shadow-2xl max-w-md mx-auto w-full text-center border-t-4 border-cyan-400">
             <h1 class="text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
-            <p class="text-slate-300 mb-8 font-medium italic">Master the language of the future.</p>
+            <p class="text-slate-300 mb-8 font-medium">Step into the Programmer's Lab.</p>
             <button onclick="loginWithGoogle()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                 <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-6 h-6">
                 CONTINUE WITH GOOGLE
@@ -59,14 +56,14 @@
             const container = document.getElementById('app-container');
             container.innerHTML = `
                 <div class="text-center w-full max-w-4xl">
-                    <h2 class="text-4xl font-black text-white mb-8 tracking-tight">SELECT YOUR AVATAR</h2>
+                    <h2 class="text-4xl font-black text-white mb-8 tracking-tight">CHOOSE YOUR PARTNER</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div onclick="selectHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 transition-all group">
-                            <img src="dragon.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <img src="dragon.png" class="w-64 mx-auto mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform">
                             <p class="text-2xl font-black text-cyan-400">BRAVE CINDER</p>
                         </div>
                         <div onclick="selectHero('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 transition-all group">
-                            <img src="unicorn.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <img src="unicorn.png" class="w-64 mx-auto mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform">
                             <p class="text-2xl font-black text-fuchsia-400">MAGIC SPARKLE</p>
                         </div>
                     </div>
@@ -84,12 +81,12 @@
             const heroColor = selectedMascot === 'dragon' ? 'text-cyan-400' : 'text-fuchsia-400';
             container.innerHTML = `
                 <div class="text-center max-w-lg mx-auto w-full">
-                    <h2 class="text-4xl font-black text-white mb-4 uppercase tracking-tighter">Choose Your Skill</h2>
-                    <p class="text-slate-400 mb-8 font-bold">Hero: <span class="${heroColor}">${selectedMascot}</span></p>
+                    <h2 class="text-4xl font-black text-white mb-4">PICK YOUR LANGUAGE</h2>
+                    <p class="text-slate-400 mb-8 font-bold italic">Current Hero: <span class="${heroColor}">${selectedMascot}</span></p>
                     <div class="space-y-4">
-                        <button onclick="finalSave('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">JAVASCRIPT (WEB)</button>
-                        <button onclick="finalSave('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">PYTHON (ROBOTS)</button>
-                        <button onclick="finalSave('CSS')" class="w-full bg-pink-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">CSS (DESIGN)</button>
+                        <button onclick="finalSave('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">JAVASCRIPT (Full Control)</button>
+                        <button onclick="finalSave('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">PYTHON (Data & AI)</button>
+                        <button onclick="finalSave('CSS')" class="w-full bg-pink-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:brightness-110">CSS (Visual Arts)</button>
                     </div>
                 </div>
             `;
@@ -113,76 +110,87 @@
             container.innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
-                    <div class="absolute top-6 left-6 glass px-6 py-2 rounded-full">
-                        <p class="text-white font-black text-sm neon-text uppercase">LEVEL 1: THE NEON COAST</p>
-                    </div>
                     
-                    <div onclick="startLesson1()" class="absolute bottom-24 left-1/3 flex flex-col items-center cursor-pointer group">
-                        <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center border-2 border-white shadow-[0_0_15px_rgba(74,222,128,0.5)]">
-                            <span class="text-xs">✅</span>
-                        </div>
-                        <p class="text-white/50 text-[10px] font-bold mt-1 uppercase">Complete</p>
+                    <div class="absolute top-6 left-6 glass px-6 py-2 rounded-full">
+                        <p class="text-white font-black text-sm neon-text uppercase tracking-widest">MAP: NEON COAST</p>
                     </div>
 
-                    <div onclick="startLesson2()" class="absolute bottom-40 left-1/2 -translate-x-1/2 flex flex-col items-center cursor-pointer group">
-                        <div class="w-20 h-20 bg-cyan-400 rounded-full animate-bounce flex items-center justify-center border-4 border-white shadow-[0_0_30px_#22d3ee]">
-                            <span class="text-3xl font-bold">2</span>
+                    <div class="absolute bottom-24 left-1/4 flex flex-col items-center opacity-50"><div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center"><span class="text-xs">✅</span></div></div>
+                    <div class="absolute bottom-40 left-1/3 flex flex-col items-center opacity-50"><div class="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center"><span class="text-xs">✅</span></div></div>
+
+                    <div onclick="startLesson3()" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group">
+                        <div class="w-24 h-24 bg-fuchsia-500 rounded-full animate-bounce flex items-center justify-center border-4 border-white shadow-[0_0_40px_#f472b6]">
+                            <span class="text-4xl">🏰</span>
                         </div>
-                        <p class="text-white font-black mt-2 neon-text uppercase tracking-widest">Variable Vault</p>
+                        <p class="text-white font-black mt-4 neon-text uppercase tracking-widest text-xl">The Syntax Tower</p>
                     </div>
                 </div>
             `;
         }
 
-        function startLesson2() {
+        function startLesson3() {
             const container = document.getElementById('app-container');
             container.innerHTML = `
-                <div class="glass p-8 rounded-[2.5rem] w-full max-w-2xl shadow-2xl flex flex-col md:flex-row gap-8 items-center border-b-8 border-cyan-500">
-                    <div class="w-1/3 text-center">
-                        <img src="${selectedMascot}.png" class="w-full drop-shadow-2xl">
-                        <div class="mt-4 p-2 bg-cyan-900/50 rounded-lg text-[10px] text-cyan-300 font-mono italic">"Variables are memory boxes!"</div>
-                    </div>
-                    <div class="flex-1 text-white">
-                        <h2 class="text-2xl font-black text-cyan-400 mb-2 uppercase">The Variable Vault</h2>
-                        <p class="text-slate-300 mb-6 text-sm">Create a variable called <span class="text-yellow-400 font-mono italic">myName</span> and put your name inside it to open the vault!</p>
-                        
-                        <div class="bg-black/80 p-6 rounded-2xl mb-4 border border-cyan-500/30 font-mono text-sm">
-                            <div class="flex gap-2 mb-4 opacity-50">
-                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                            </div>
-                            <span class="text-purple-400">let</span> <span class="text-cyan-400">myName</span> = "<input id="varInput" type="text" placeholder="Your Name" class="bg-transparent border-b border-cyan-400 outline-none text-white w-24">";
+                <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 border-fuchsia-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-3xl font-black text-fuchsia-400 uppercase tracking-tighter">Level 3: Building a Function</h2>
+                            <p class="text-slate-300 text-sm mt-1">Functions are actions. You must type the action name, the <span class="text-yellow-400 font-bold">()</span> to start it, and <span class="text-cyan-400 font-bold">""</span> for words.</p>
                         </div>
-                        
-                        <button onclick="checkVariable()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-black py-4 rounded-xl transition-all shadow-lg uppercase">Unlock Vault</button>
+                        <img src="${selectedMascot}.png" class="w-24 drop-shadow-xl">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div class="bg-black/80 rounded-2xl overflow-hidden border border-white/10">
+                                <div class="bg-white/5 px-4 py-2 flex gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                </div>
+                                <textarea id="fullEditor" class="w-full h-48 bg-transparent p-6 text-fuchsia-300 code-font outline-none leading-relaxed" placeholder="// Type your code here..."></textarea>
+                            </div>
+                            <button onclick="validateLesson3()" class="w-full bg-fuchsia-500 hover:bg-fuchsia-400 text-white font-black py-4 rounded-2xl shadow-lg transition-all uppercase tracking-widest">Run Code</button>
+                        </div>
+
+                        <div class="bg-white/5 rounded-3xl p-6 border border-white/5">
+                            <h3 class="text-xs font-black text-slate-500 mb-4 uppercase">Quest Instructions:</h3>
+                            <ul class="text-sm text-slate-300 space-y-3">
+                                <li>1. Type <span class="text-fuchsia-400 font-mono">alert</span> to call the popup magic.</li>
+                                <li>2. Add <span class="text-yellow-400 font-mono">()</span> parentheses immediately after.</li>
+                                <li>3. Inside those, put quotes <span class="text-cyan-400 font-mono">" "</span>.</li>
+                                <li>4. Type <span class="text-white italic">Level Up</span> inside the quotes.</li>
+                            </ul>
+                            <p class="mt-6 text-[10px] text-slate-500 font-mono italic">Goal: alert("Level Up")</p>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
-        function checkVariable() {
-            const name = document.getElementById('varInput').value.trim();
-            if (name.length > 1) {
+        function validateLesson3() {
+            const code = document.getElementById('fullEditor').value.trim();
+            
+            // Step-by-step logic check
+            if (!code.startsWith('alert')) {
+                alert("❌ ERROR: You didn't start with the 'alert' command.");
+            } else if (!code.includes('(') || !code.includes(')')) {
+                alert("❌ SYNTAX ERROR: You forgot the () parentheses. These tell the computer to 'DO' the action.");
+            } else if (!code.includes('"') && !code.includes("'")) {
+                alert("❌ QUOTE ERROR: Words need to be inside \"quotes\" so the computer knows they are text strings.");
+            } else if (code.toLowerCase() === 'alert("level up")' || code.toLowerCase() === 'alert("level up");') {
                 const container = document.getElementById('app-container');
                 container.innerHTML = `
                     <div class="text-center">
-                        <h1 class="text-9xl mb-4">🔓</h1>
-                        <h2 class="text-4xl font-black text-white neon-text uppercase mb-2">VAULT OPENED!</h2>
-                        <p class="text-slate-400 font-bold mb-6">The computer saved <span class="text-cyan-400 underline">"${name}"</span> in its memory box!</p>
-                        <div class="glass p-6 rounded-3xl inline-block border-2 border-yellow-400">
-                            <p class="text-white font-mono italic text-sm text-left">
-                                <span class="text-purple-400">Memory:</span> {<br>
-                                &nbsp;&nbsp;myName: <span class="text-green-400">"${name}"</span><br>
-                                }
-                            </p>
-                        </div>
-                        <br>
-                        <button onclick="goToMap()" class="mt-8 bg-white text-slate-900 px-12 py-4 rounded-2xl font-black hover:scale-105 transition-all">RETURN TO MAP</button>
+                        <div class="text-9xl mb-6">🏆</div>
+                        <h2 class="text-6xl font-black text-white neon-text uppercase italic">Perfect Syntax!</h2>
+                        <p class="text-fuchsia-400 font-bold text-xl mt-4">You just wrote a real JavaScript Function Call.</p>
+                        <p class="text-slate-400 mt-2">You used parentheses, quotes, and keywords correctly.</p>
+                        <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl hover:scale-105 transition-all">CONTINUE QUEST</button>
                     </div>
                 `;
             } else {
-                alert("Type your name to create the variable!");
+                alert("Close! Check your spelling. It should be: alert(\"Level Up\")");
             }
         }
     </script>
