@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Master the Basics</title>
+    <title>CodeQuest: Chapter 1 Mastery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -15,7 +15,6 @@
         .code-font { font-family: 'Fira Code', 'Courier New', monospace; }
         textarea { resize: none; spellcheck: false; }
 
-        /* Mascot Visual Style */
         .mascot-on-map {
             width: 130px;
             position: absolute;
@@ -57,11 +56,13 @@
 
         let userData = { mascot: "", language: "", currentLevel: 1, coins: 0 };
 
+        // CHAPTER 1: THE ANATOMY OF PRINT
         const LESSON_DATA = {
-            1: { title: "The Talking Spell", goal: "console.log(\"Hello\")", type: "learn", hint: "Type the console.log command exactly as shown. Words MUST be in quotes!" },
-            2: { title: "Memory Boxes", goal: "let power = 10", type: "learn", hint: "Use 'let' to create a variable. Numbers do NOT need quotes!" },
-            3: { title: "MEMORY CHALLENGE", goal: "let quest = \"Active\"", type: "quiz", hint: "NO HELP: Create a variable called 'quest' and set it to the word 'Active'." },
-            4: { title: "The Dot Secret", goal: "hero.glow = true", hint: "Objects like your hero have properties. Connect them with a DOT." }
+            1: { title: "Step 1: The Message", goal: "Hello World", type: "learn", hint: "Just type the message: Hello World" },
+            2: { title: "Step 2: The Quotes", goal: "\"Hello World\"", type: "learn", hint: "Add double quotes around your message to turn it into 'Data'." },
+            3: { title: "Step 3: The Shield", goal: "(\"Hello World\")", type: "learn", hint: "Place your quoted message inside parentheses ( )." },
+            4: { title: "Step 4: The Voice", goal: "print(\"Hello World\")", type: "learn", hint: "Add the word 'print' at the beginning to speak your code!" },
+            5: { title: "CHAPTER EXAM", goal: "print(\"Hello World\")", type: "quiz", hint: "RECALL: Write the full command from memory to speak 'Hello World'!" }
         };
 
         function loginWithGoogle() {
@@ -95,8 +96,7 @@
                             <p class="text-2xl font-black text-fuchsia-400 uppercase">Magic Sparkle</p>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         function selectHero(hero) { userData.mascot = hero; goToLanguageSelection(); }
@@ -130,38 +130,32 @@
         function goToMap() {
             const container = document.getElementById('app-container');
             container.className = "w-full min-h-screen flex items-center justify-center p-4";
-            
             container.innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
-                    
                     <img src="${userData.mascot}.png" class="mascot-on-map drop-shadow-2xl">
-
                     <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 border-t border-white/10 flex items-center px-12 justify-between z-20">
                         <div class="flex items-center gap-8">
                             <div class="w-16 h-16 bg-cyan-500/20 rounded-full border-2 border-cyan-400 overflow-hidden"><img src="${userData.mascot}.png" class="w-full h-full object-contain"></div>
-                            <div class="flex flex-col"><span class="text-[10px] text-slate-500 font-black uppercase tracking-widest">Level</span><span class="text-2xl font-black text-white">${userData.currentLevel}</span></div>
+                            <div class="flex flex-col"><span class="text-[10px] text-slate-500 font-black uppercase tracking-widest">Chapter 1</span><span class="text-2xl font-black text-white">Lvl ${userData.currentLevel}</span></div>
                             <div class="flex items-center gap-2 ml-4"><span class="text-2xl">🟡</span><span class="text-2xl font-black text-yellow-400">${userData.coins || 0}</span></div>
                         </div>
                         <button onclick="startCurrentLesson()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg hover:scale-105 shadow-[0_0_20px_cyan]">
                             ENTER LEVEL ${userData.currentLevel}
                         </button>
                     </div>
-
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-20">
                         <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_40px_cyan] flex items-center justify-center">
                             <span class="text-4xl font-black text-white">${userData.currentLevel}</span>
                         </div>
-                        <p class="text-white font-black mt-4 neon-text tracking-widest uppercase">${LESSON_DATA[userData.currentLevel]?.title || 'COMING SOON'}</p>
+                        <p class="text-white font-black mt-4 neon-text tracking-widest uppercase">${LESSON_DATA[userData.currentLevel]?.title || 'CHAPTER COMPLETE'}</p>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         function startCurrentLesson() {
             const lesson = LESSON_DATA[userData.currentLevel];
             const container = document.getElementById('app-container');
-            
             container.innerHTML = `
                 <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 ${lesson.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'} relative z-50">
                     <div class="flex justify-between items-start text-white">
@@ -171,36 +165,28 @@
                         </div>
                         <img src="${userData.mascot}.png" class="w-24 drop-shadow-xl">
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-4">
                             <div class="bg-black/90 p-4 rounded-2xl">
-                                <span class="text-xs text-slate-500 uppercase font-mono tracking-widest">Editor.js</span>
-                                <textarea id="fullEditor" class="w-full h-40 bg-transparent py-4 text-cyan-300 code-font text-lg outline-none" placeholder="// Think before you type..."></textarea>
+                                <textarea id="fullEditor" class="w-full h-40 bg-transparent py-4 text-cyan-300 code-font text-lg outline-none" placeholder="// Type here..."></textarea>
                             </div>
-                            <button onclick="validateLesson()" class="w-full ${lesson.type === 'quiz' ? 'bg-red-500' : 'bg-cyan-500'} text-slate-900 font-black py-4 rounded-2xl shadow-lg uppercase tracking-widest">Execute Script</button>
+                            <button onclick="validateLesson()" class="w-full ${lesson.type === 'quiz' ? 'bg-red-500' : 'bg-cyan-500'} text-slate-900 font-black py-4 rounded-2xl shadow-lg uppercase tracking-widest">Run Code</button>
                         </div>
-                        
                         <div class="bg-white/5 rounded-[2rem] p-8 border border-white/10 text-center flex flex-col justify-center">
                             <h3 class="text-xs font-black text-slate-500 mb-4 uppercase">Task Goal:</h3>
-                            ${lesson.type === 'quiz' ? 
-                                '<p class="text-xl text-red-400 font-black italic">RECALL FROM MEMORY!</p>' : 
-                                `<code class="text-2xl text-white font-mono font-black">${lesson.goal}</code>`
-                            }
+                            ${lesson.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">RECALL FROM MEMORY!</p>' : `<code class="text-2xl text-white font-mono font-black">${lesson.goal}</code>`}
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         function validateLesson() {
-            const input = document.getElementById('fullEditor').value.trim().replace(/\s/g, "");
-            const goal = LESSON_DATA[userData.currentLevel].goal.replace(/\s/g, "");
-            
-            if (input === goal || input === goal + ";") {
+            const input = document.getElementById('fullEditor').value.trim();
+            const goal = LESSON_DATA[userData.currentLevel].goal;
+            if (input === goal) {
                 updateProgress(userData.currentLevel + 1, 100);
             } else {
-                alert("The code didn't run! Check your syntax.");
+                alert("Incorrect. Double check your typing and quotes!");
             }
         }
 
@@ -223,11 +209,9 @@
             container.innerHTML = `
                 <div class="text-center animate-bounce relative z-50">
                     <h1 class="text-9xl mb-6">🧠</h1>
-                    <h2 class="text-5xl font-black text-white neon-text uppercase tracking-tighter">SKILL UNLOCKED!</h2>
-                    <p class="text-cyan-400 font-bold text-2xl mt-4 italic">You learned it.</p>
+                    <h2 class="text-5xl font-black text-white neon-text uppercase tracking-tighter">CHAPTER STEP COMPLETE!</h2>
                     <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl">CONTINUE QUEST</button>
-                </div>
-            `;
+                </div>`;
         }
     </script>
 </body>
