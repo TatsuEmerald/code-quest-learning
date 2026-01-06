@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Chapter 2 Mastery</title>
+    <title>CodeQuest: Step 8 Clarity</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -68,7 +68,7 @@
             6: { chapter: 2, title: "Step 5: The Value", goal: "10", type: "learn", hint: "Just type the number 10. Numbers don't need quotes!" },
             7: { chapter: 2, title: "Step 6: The Name", goal: "power = 10", type: "learn", hint: "Give your number a name using the equals sign." },
             8: { chapter: 2, title: "Step 7: The Box", goal: "let power = 10", type: "learn", hint: "Use 'let' to create a new variable box." },
-            9: { chapter: 2, title: "Step 8: Reading the Box", goal: "console.log(power)", type: "learn", hint: "Use your Chapter 1 skill to 'print' the power variable (no quotes for variables!)" },
+            9: { chapter: 2, title: "Step 8: Peeking Inside", goal: "console.log(power)", type: "learn", hint: "To see what is inside the 'power' box, type: console.log(power). Notice: NO QUOTES around the name!" },
             10: { chapter: 2, title: "CHAPTER 2 EXAM", goal: "let power = 10", type: "quiz", hint: "RECALL: Create a variable called 'power' set to 10." }
         };
 
@@ -199,7 +199,7 @@
             if (input === goal) {
                 updateProgress(userData.currentLevel + 1, 100);
             } else {
-                alert("Incorrect. Double check your typing!");
+                alert("Incorrect. Double check your typing! (Remember: No quotes for the variable name inside console.log)");
             }
         }
 
@@ -223,6 +223,7 @@
                 <div class="text-center animate-bounce relative z-50">
                     <h1 class="text-9xl mb-6">🧠</h1>
                     <h2 class="text-5xl font-black text-white neon-text uppercase tracking-tighter">CHAPTER STEP COMPLETE!</h2>
+                    <p class="text-cyan-400 font-bold text-lg mt-4 italic max-w-lg mx-auto leading-relaxed">Quotes are for real words. Variable names (like power) are just labels for boxes, so they never use quotes!</p>
                     <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl">CONTINUE QUEST</button>
                 </div>`;
         }
