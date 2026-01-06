@@ -9,22 +9,21 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #0f172a; overflow: hidden; }
+        body { background: #0f172a; overflow: hidden; color: white; }
         .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
         .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.5); }
         .code-font { font-family: 'Fira Code', 'Courier New', monospace; }
         textarea { resize: none; spellcheck: false; }
-        .hero-preview { transition: filter 0.5s ease; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center font-sans text-white">
+<body class="min-h-screen flex items-center justify-center font-sans">
 
-    <div id="app-container" class="w-full flex items-center justify-center p-4 text-slate-900">
+    <div id="app-container" class="w-full flex items-center justify-center p-4">
         <div class="glass p-8 rounded-[2.5rem] shadow-2xl max-w-md mx-auto w-full text-center border-t-4 border-cyan-400">
             <h1 class="text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
             <p class="text-slate-300 mb-8 font-medium italic">Master the Digital Realm.</p>
             <button onclick="loginWithGoogle()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all">
-                <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-6 h-6">
+                <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-6 h-6 text-slate-900">
                 CONTINUE WITH GOOGLE
             </button>
         </div>
@@ -45,11 +44,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let userData = {
-            mascot: "",
-            language: "",
-            currentLevel: 1
-        };
+        let userData = { mascot: "", language: "", currentLevel: 1, coins: 0 };
 
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -72,14 +67,14 @@
         function goToMascotSelection() {
             const container = document.getElementById('app-container');
             container.innerHTML = `
-                <div class="text-center w-full max-w-4xl text-white">
-                    <h2 class="text-4xl font-black mb-8 tracking-tight uppercase">Select Your Avatar</h2>
+                <div class="text-center w-full max-w-4xl">
+                    <h2 class="text-4xl font-black mb-8 uppercase">Select Your Avatar</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div onclick="selectHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 transition-all group text-slate-900">
+                        <div onclick="selectHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 transition-all group">
                             <img src="dragon.png" class="w-64 mx-auto mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform">
                             <p class="text-2xl font-black text-cyan-400">BRAVE CINDER</p>
                         </div>
-                        <div onclick="selectHero('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 transition-all group text-slate-900">
+                        <div onclick="selectHero('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 transition-all group">
                             <img src="unicorn.png" class="w-64 mx-auto mb-4 drop-shadow-2xl group-hover:scale-110 transition-transform">
                             <p class="text-2xl font-black text-fuchsia-400">MAGIC SPARKLE</p>
                         </div>
@@ -88,16 +83,13 @@
             `;
         }
 
-        function selectHero(hero) {
-            userData.mascot = hero;
-            goToLanguageSelection();
-        }
+        function selectHero(hero) { userData.mascot = hero; goToLanguageSelection(); }
 
         function goToLanguageSelection() {
             const container = document.getElementById('app-container');
             const heroColor = userData.mascot === 'dragon' ? 'text-cyan-400' : 'text-fuchsia-400';
             container.innerHTML = `
-                <div class="text-center max-w-lg mx-auto w-full text-white">
+                <div class="text-center max-w-lg mx-auto w-full">
                     <h2 class="text-4xl font-black mb-4 uppercase">Choose Your Quest</h2>
                     <p class="text-slate-400 mb-8 font-bold italic">Partner: <span class="${heroColor}">${userData.mascot}</span></p>
                     <div class="space-y-4">
@@ -112,12 +104,14 @@
         function finalSave(lang) {
             userData.language = lang;
             userData.currentLevel = 1;
+            userData.coins = 0;
             const user = auth.currentUser;
             if (user) {
                 db.collection("users").doc(user.uid).set({
                     mascot: userData.mascot,
                     chosenLanguage: lang,
                     currentLevel: 1,
+                    coins: 0,
                     setupComplete: true
                 }, { merge: true }).then(() => goToMap());
             }
@@ -125,77 +119,69 @@
 
         function goToMap() {
             const container = document.getElementById('app-container');
-            container.className = "w-full min-h-screen flex items-center justify-center p-4 text-white";
+            container.className = "w-full min-h-screen flex items-center justify-center p-4";
             
-            // Logic for checkmarks
-            const check1 = userData.currentLevel > 1 ? '✅' : '1';
-            const check2 = userData.currentLevel > 2 ? '✅' : '2';
-            const check3 = userData.currentLevel > 3 ? '✅' : '3';
-            const check4 = userData.currentLevel > 4 ? '✅' : '4';
+            // Calculate real progress based on 10 total levels
+            const totalLevels = 10;
+            const progressPercent = Math.round(((userData.currentLevel - 1) / totalLevels) * 100);
 
             container.innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
                     
-                    <div class="absolute top-6 left-6 glass px-6 py-2 rounded-full font-black text-xs neon-text uppercase tracking-widest">MAP: NEON COAST</div>
+                    <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/80 backdrop-blur-md border-t border-white/10 flex items-center px-12 justify-between">
+                        
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 h-16 bg-cyan-500/20 rounded-full border-2 border-cyan-400 overflow-hidden">
+                                <img src="${userData.mascot}.png" class="w-full h-full object-contain">
+                            </div>
+                            
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-slate-500 font-black uppercase tracking-widest">Total Progress</span>
+                                <span class="text-2xl font-black text-white neon-text">${progressPercent}%</span>
+                            </div>
 
-                    <div class="absolute bottom-24 left-1/4 flex flex-col items-center">
-                        <div class="w-10 h-10 ${userData.currentLevel > 1 ? 'bg-green-500' : 'bg-slate-700'} rounded-full flex items-center justify-center border-2 border-white">
-                            <span class="text-xs font-bold">${check1}</span>
+                            <div class="flex items-center gap-3 ml-8">
+                                <div class="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.5)] border-2 border-white">
+                                    <span class="text-xl">🟡</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-slate-500 font-black uppercase tracking-widest">Code Coins</span>
+                                    <span class="text-2xl font-black text-yellow-400">${userData.coins}</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <button onclick="startLesson4()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.5)]">
+                            START LEVEL ${userData.currentLevel}
+                        </button>
                     </div>
 
-                    <div class="absolute bottom-40 left-1/3 flex flex-col items-center">
-                        <div class="w-10 h-10 ${userData.currentLevel > 2 ? 'bg-green-500' : 'bg-slate-700'} rounded-full flex items-center justify-center border-2 border-white">
-                            <span class="text-xs font-bold">${check2}</span>
-                        </div>
-                    </div>
-
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                        <div class="w-10 h-10 ${userData.currentLevel > 3 ? 'bg-green-500' : 'bg-slate-700'} rounded-full flex items-center justify-center border-2 border-white">
-                            <span class="text-xs font-bold">${check3}</span>
-                        </div>
-                    </div>
-
-                    <div onclick="startLesson4()" class="absolute top-1/4 right-1/4 flex flex-col items-center cursor-pointer group">
-                        <div class="w-20 h-20 bg-cyan-500 rounded-full animate-bounce flex items-center justify-center border-4 border-white shadow-[0_0_40px_rgba(34,211,238,0.8)]">
-                            <span class="text-3xl font-black">${check4}</span>
-                        </div>
-                        <p class="text-white font-black mt-2 neon-text uppercase tracking-widest text-sm">Level 4: Painter</p>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                         <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce flex items-center justify-center border-4 border-white shadow-[0_0_40px_cyan]">
+                            <span class="text-4xl font-black">${userData.currentLevel}</span>
+                         </div>
                     </div>
                 </div>
             `;
         }
 
-        // --- LESSON 4 LOGIC ---
         function startLesson4() {
             const container = document.getElementById('app-container');
             container.innerHTML = `
-                <div class="glass p-10 rounded-[3rem] w-full max-w-5xl shadow-2xl flex flex-col gap-6 border-b-8 border-cyan-500 text-white">
+                <div class="glass p-10 rounded-[3rem] w-full max-w-5xl shadow-2xl flex flex-col gap-6 border-b-8 border-cyan-500">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <h2 class="text-3xl font-black text-cyan-400 uppercase tracking-tighter">Level 4: Spacing & Properties</h2>
-                        </div>
+                        <h2 class="text-3xl font-black text-cyan-400 uppercase">Level 4: The Property Painter</h2>
                         <img id="heroTarget" src="${userData.mascot}.png" class="w-28 hero-preview drop-shadow-xl">
                     </div>
-
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div class="space-y-4">
-                            <div class="bg-black/90 rounded-3xl overflow-hidden border border-white/20">
-                                <textarea id="fullEditor" class="w-full h-48 bg-transparent p-8 text-cyan-300 code-font text-lg outline-none leading-relaxed" placeholder="hero.color = 'neon'"></textarea>
-                            </div>
+                        <div class="space-y-4 text-slate-900">
+                            <textarea id="fullEditor" class="w-full h-48 bg-black/90 p-8 text-cyan-300 code-font text-lg rounded-3xl outline-none" placeholder="hero.color = 'neon'"></textarea>
                             <button onclick="validateLesson4()" class="w-full bg-cyan-500 text-slate-900 font-black py-5 rounded-2xl shadow-lg uppercase tracking-widest text-lg">Run Code</button>
                         </div>
                         <div class="bg-white/5 rounded-[2rem] p-8 border border-white/10 text-sm">
-                            <h3 class="text-yellow-400 font-black mb-4 uppercase underline underline-offset-4">Rulebook:</h3>
-                            <p>Type exactly: <code class="bg-black/40 px-2 py-1 rounded text-cyan-300">hero.color = "neon"</code></p>
-                            <ul class="mt-4 space-y-2 opacity-80">
-                                <li>• Start with <b>hero</b></li>
-                                <li>• Add the <b>.</b> (dot)</li>
-                                <li>• Add the <b>color</b> property</li>
-                                <li>• Space, then <b>=</b>, then Space</li>
-                                <li>• Words in <b>"quotes"</b></li>
-                            </ul>
+                            <h3 class="text-yellow-400 font-black mb-4 uppercase">Rulebook:</h3>
+                            <code class="text-cyan-300">hero.color = "neon"</code>
                         </div>
                     </div>
                 </div>
@@ -203,36 +189,26 @@
         }
 
         function validateLesson4() {
-            const rawCode = document.getElementById('fullEditor').value.trim();
-            if (rawCode.replace(/\s/g, "") === 'hero.color="neon"' || rawCode.replace(/\s/g, "") === 'hero.color="neon";') {
-                updateProgress(5); // Update user to Level 5 in database!
+            const code = document.getElementById('fullEditor').value.trim().replace(/\s/g, "");
+            if (code === 'hero.color="neon"' || code === 'hero.color="neon";') {
+                updateProgress(5, 50); // Level up + 50 coins!
             } else {
-                alert("Check your rulebook and try again!");
+                alert("Check your syntax!");
             }
         }
 
-        function updateProgress(newLevel) {
+        function updateProgress(newLevel, coinBonus) {
             const user = auth.currentUser;
             if (user) {
                 db.collection("users").doc(user.uid).update({
-                    currentLevel: newLevel
+                    currentLevel: newLevel,
+                    coins: firebase.firestore.FieldValue.increment(coinBonus)
                 }).then(() => {
                     userData.currentLevel = newLevel;
-                    showSuccess();
+                    userData.coins += coinBonus;
+                    goToMap();
                 });
             }
-        }
-
-        function showSuccess() {
-            const container = document.getElementById('app-container');
-            container.innerHTML = `
-                <div class="text-center text-white">
-                    <h1 class="text-9xl mb-6">🏆</h1>
-                    <h2 class="text-6xl font-black neon-text uppercase italic">Level Saved!</h2>
-                    <p class="text-cyan-400 font-bold text-2xl mt-4">Database updated. The map now shows your progress.</p>
-                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl hover:scale-105 transition-all">BACK TO MAP</button>
-                </div>
-            `;
         }
     </script>
 </body>
