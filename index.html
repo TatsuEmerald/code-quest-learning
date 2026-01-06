@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Path to Mastery</title>
+    <title>CodeQuest: Chapter 1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -19,11 +19,10 @@
 </head>
 <body class="min-h-screen font-sans flex items-center justify-center">
 
-    <div id="app-container" class="w-full flex items-center justify-center p-4">
-        </div>
+    <div id="app-container" class="w-full flex items-center justify-center p-4"></div>
 
     <script>
-        // --- FIREBASE CONFIG ---
+        // --- FIREBASE CONFIG (SAME) ---
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
           authDomain: "codequest-c1da5.firebaseapp.com",
@@ -38,30 +37,23 @@
 
         let userData = { mascot: "dragon", pythonLevel: 1, cssLevel: 1, coins: 0, activeLanguage: "" };
 
-        // --- DETAILED LESSON DATA ---
-        const PATHS = {
+        // --- CHAPTER SYSTEM DATA ---
+        const CHAPTERS = {
             "Python": {
-                1: { title: "Snake Speak", task: "Use the print command to say Hello", goal: "print('Hello')", hint: "Type: print('Hello')" },
-                2: { title: "Energy Storage", task: "Create a variable named energy and set it to 100", goal: "energy=100", hint: "Type: energy = 100" }
+                "Chapter 1: The Basics": [
+                    { lvl: 1, title: "Snake Speak", task: "Use print to say Hello", goal: "print('Hello')", type: "learn" },
+                    { lvl: 2, title: "Energy Storage", task: "Set variable energy to 100", goal: "energy=100", type: "learn" },
+                    { lvl: 3, title: "Naming the Hero", task: "Set variable name to 'Cinder'", goal: "name='Cinder'", type: "learn" },
+                    { lvl: 4, title: "The Overcharge", task: "Update energy to 200", goal: "energy=200", type: "learn" },
+                    { lvl: 5, title: "CHAPTER EXAM", task: "RECALL: Create a variable named power set to 50", goal: "power=50", type: "quiz" }
+                ]
             },
             "CSS": {
-                1: { title: "Color Spell", task: "Change the text color to blue", goal: "color:blue;", hint: "Type: color: blue;" },
-                2: { title: "Glow Effect", task: "Add a red background", goal: "background:red;", hint: "Type: background: red;" }
+                "Chapter 1: Colors": [
+                    { lvl: 1, title: "Color Spell", task: "Set color to blue", goal: "color:blue;", type: "learn" }
+                ]
             }
         };
-
-        window.onload = () => {
-            document.getElementById('app-container').innerHTML = `
-                <div class="glass p-10 rounded-[3rem] text-center border-t-4 border-cyan-400">
-                    <h1 class="text-5xl font-black mb-8">CODEQUEST</h1>
-                    <button onclick="loginWithGoogle()" class="bg-white text-slate-900 px-10 py-4 rounded-2xl font-black">CONTINUE WITH GOOGLE</button>
-                </div>`;
-        };
-
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((res) => checkUserProgress(res.user.uid));
-        }
 
         function checkUserProgress(uid) {
             db.collection("users").doc(uid).get().then((doc) => {
@@ -74,45 +66,32 @@
             });
         }
 
-        function goToMascotSelection() {
-            const container = document.getElementById('app-container');
-            container.innerHTML = `
-                <div class="text-center">
-                    <h2 class="text-3xl font-black mb-10 uppercase tracking-widest">Select Your Partner</h2>
-                    <div class="flex gap-10">
-                        <div onclick="saveMascot('dragon')" class="glass p-8 rounded-[3rem] cursor-pointer hover:border-cyan-400"><img src="dragon.png" class="w-40"><p class="mt-4 font-black">DRAGON</p></div>
-                        <div onclick="saveMascot('unicorn')" class="glass p-8 rounded-[3rem] cursor-pointer hover:border-fuchsia-400"><img src="unicorn.png" class="w-40"><p class="mt-4 font-black">UNICORN</p></div>
-                    </div>
-                </div>`;
-        }
-
-        function saveMascot(choice) {
-            userData.mascot = choice;
-            db.collection("users").doc(auth.currentUser.uid).set({
-                mascot: choice, pythonLevel: 1, cssLevel: 1, coins: 0
-            }, { merge: true }).then(() => goToMap());
-        }
-
         function goToMap() {
             const container = document.getElementById('app-container');
             container.innerHTML = `
-                <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 overflow-hidden" 
+                <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
                      style="background-image: url('map.png'); background-color: #0f172a;">
                     
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[58%] z-10 pointer-events-none">
                         <img src="${userData.mascot}.png" class="w-32 drop-shadow-2xl">
                     </div>
 
-                    <div onclick="startPath('Python')" class="island-btn top-[40%] left-[10%] w-[25%] h-[40%] flex items-end justify-center pb-8">
-                        <span class="bg-blue-600 px-4 py-1 rounded-lg text-xs font-black uppercase shadow-lg">Python Realm</span>
+                    <div onclick="startPath('Python')" class="island-btn top-[40%] left-[10%] w-[25%] h-[40%] flex flex-col items-center justify-end pb-8">
+                        <span class="bg-blue-600 px-4 py-1 rounded-lg text-[10px] font-black uppercase mb-1">Python Chapter 1</span>
+                        <div class="w-full bg-black/50 h-1 w-24 rounded-full overflow-hidden">
+                            <div class="bg-blue-400 h-full" style="width: ${((userData.pythonLevel-1)/5)*100}%"></div>
+                        </div>
                     </div>
 
-                    <div onclick="startPath('CSS')" class="island-btn top-[40%] right-[10%] w-[25%] h-[40%] flex items-end justify-center pb-8">
-                        <span class="bg-pink-600 px-4 py-1 rounded-lg text-xs font-black uppercase shadow-lg">CSS Styling</span>
+                    <div onclick="startPath('CSS')" class="island-btn top-[40%] right-[10%] w-[25%] h-[40%] flex flex-col items-center justify-end pb-8">
+                        <span class="bg-pink-600 px-4 py-1 rounded-lg text-[10px] font-black uppercase mb-1">CSS Styling</span>
+                        <div class="w-full bg-black/50 h-1 w-24 rounded-full overflow-hidden">
+                            <div class="bg-pink-400 h-full" style="width: 20%"></div>
+                        </div>
                     </div>
 
                     <div class="absolute bottom-0 left-0 w-full h-16 bg-slate-900/90 flex items-center px-12 justify-between border-t border-white/10">
-                        <span class="text-xs font-black text-cyan-400 uppercase tracking-widest">Choose your language to start</span>
+                        <span class="text-xs font-black text-cyan-400 uppercase tracking-widest">CHAPTER PROGRESS: ${userData.pythonLevel} / 5</span>
                         <span class="text-yellow-400 font-black">🟡 ${userData.coins || 0}</span>
                     </div>
                 </div>`;
@@ -120,56 +99,56 @@
 
         function startPath(lang) {
             userData.activeLanguage = lang;
-            const lvl = lang === 'Python' ? (userData.pythonLevel || 1) : (userData.cssLevel || 1);
-            const lesson = PATHS[lang][lvl] || PATHS[lang][1];
+            const currentLvl = lang === 'Python' ? userData.pythonLevel : userData.cssLevel;
+            const chapterData = CHAPTERS[lang]["Chapter 1: " + (lang === 'Python' ? 'The Basics' : 'Colors')];
+            const lesson = chapterData.find(l => l.lvl === currentLvl) || chapterData[0];
 
             const container = document.getElementById('app-container');
             container.innerHTML = `
                 <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 ${lang === 'Python' ? 'border-blue-500' : 'border-pink-500'}">
                     <div class="flex justify-between items-center">
-                        <h2 class="text-3xl font-black uppercase">${lang} LVL ${lvl}: ${lesson.title}</h2>
-                        <button onclick="goToMap()" class="text-[10px] font-black opacity-50 uppercase hover:opacity-100">Exit Quest</button>
+                        <h2 class="text-3xl font-black uppercase">${lesson.title}</h2>
+                        <button onclick="goToMap()" class="text-[10px] font-black opacity-50 uppercase">Back to Map</button>
                     </div>
 
-                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
-                        <p class="text-cyan-400 font-bold uppercase text-xs tracking-widest mb-2">Professor ${userData.mascot}:</p>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
                         <p class="text-xl font-medium text-white italic">"${lesson.task}"</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-4">
-                            <textarea id="codeEditor" class="w-full h-32 bg-black/80 p-6 text-cyan-300 code-font text-lg rounded-2xl outline-none" placeholder="Type here..."></textarea>
-                            <button onclick="validateCode()" class="w-full bg-white text-slate-900 font-black py-4 rounded-xl uppercase hover:bg-cyan-100 active:scale-95 transition-all">Submit Solution</button>
+                            <textarea id="codeEditor" class="w-full h-32 bg-black/80 p-6 text-cyan-300 code-font text-lg rounded-2xl outline-none" placeholder="Type answer..."></textarea>
+                            <button onclick="validateCode()" class="w-full bg-white text-slate-900 font-black py-4 rounded-xl uppercase active:scale-95">Complete Level</button>
                         </div>
                         <div class="bg-white/5 rounded-2xl p-6 text-center flex flex-col justify-center border border-white/5">
-                            <p class="text-slate-500 text-[10px] font-black uppercase mb-4">Required Syntax:</p>
-                            <code class="text-xl text-white font-black">${lesson.goal}</code>
-                            <p class="mt-4 text-xs text-slate-500">${lesson.hint}</p>
+                            <p class="text-slate-500 text-[10px] font-black uppercase mb-4">Required Solution:</p>
+                            ${lesson.type === 'quiz' ? 
+                                '<p class="text-xl text-red-400 font-black italic underline">MEMORY CHALLENGE!</p>' : 
+                                `<code class="text-xl text-white font-black">${lesson.goal}</code>`
+                            }
                         </div>
                     </div>
                 </div>`;
         }
 
         function validateCode() {
-            const input = document.getElementById('codeEditor').value.trim().replace(/\s/g, "");
+            const input = document.getElementById('codeEditor').value.trim().replace(/\s/g, "").replace(/"/g, "'");
             const lang = userData.activeLanguage;
-            const lvl = lang === 'Python' ? (userData.pythonLevel || 1) : (userData.cssLevel || 1);
-            const goal = PATHS[lang][lvl].goal.replace(/\s/g, "");
-
-            if (input === goal || input === goal + ";") {
-                alert("Quest Successful! +100 Gold");
+            const currentLvl = lang === 'Python' ? userData.pythonLevel : userData.cssLevel;
+            const chapterData = CHAPTERS[lang]["Chapter 1: " + (lang === 'Python' ? 'The Basics' : 'Colors')];
+            const lesson = chapterData.find(l => l.lvl === currentLvl);
+            
+            if (input === lesson.goal.replace(/\s/g, "").replace(/"/g, "'")) {
+                alert("Quest Successful!");
                 if (lang === 'Python') userData.pythonLevel++; else userData.cssLevel++;
                 userData.coins += 100;
-                
-                db.collection("users").doc(auth.currentUser.uid).update({
-                    pythonLevel: userData.pythonLevel,
-                    cssLevel: userData.cssLevel,
-                    coins: userData.coins
-                }).then(() => goToMap());
+                db.collection("users").doc(auth.currentUser.uid).update(userData).then(() => goToMap());
             } else {
-                alert("The code failed. Double check your typing!");
+                alert("Incorrect. Check the task and try again!");
             }
         }
+        
+        // Include login/mascot functions here...
     </script>
 </body>
 </html>
