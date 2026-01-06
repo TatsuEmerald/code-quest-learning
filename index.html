@@ -1,0 +1,30 @@
+// This is a simplified version of your Login / Sign-up logic
+function LoginScreen() {
+  const [isNewPlayer, setIsNewPlayer] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-sky-400 flex flex-col items-center justify-center p-6 text-white font-sans">
+      <h1 className="text-5xl font-bold mb-8 drop-shadow-lg text-yellow-300">CodeQuest</h1>
+      
+      <div className="bg-white p-8 rounded-3xl shadow-2xl text-slate-800 w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">
+          {isNewPlayer ? "Create Your Explorer Account" : "Welcome Back!"}
+        </h2>
+        
+        <input type="email" placeholder="Parent's Email" className="w-full p-4 mb-4 border-2 border-slate-200 rounded-xl" />
+        <input type="password" placeholder="Password" className="w-full p-4 mb-6 border-2 border-slate-200 rounded-xl" />
+        
+        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-2xl transition-all transform hover:scale-105 shadow-lg mb-4">
+          {isNewPlayer ? "Start My Quest!" : "Resume My Quest!"}
+        </button>
+
+        <button 
+          onClick={() => setIsNewPlayer(!isNewPlayer)}
+          className="w-full text-slate-500 font-semibold hover:text-orange-500"
+        >
+          {isNewPlayer ? "Already have an account? Log in" : "New here? Create an account"}
+        </button>
+      </div>
+    </div>
+  );
+}
