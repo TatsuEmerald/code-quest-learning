@@ -3,26 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: The Explained Odyssey</title>
+    <title>CodeQuest: Modular Odyssey</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #0f172a; overflow: hidden; color: white; }
+        body { background: #0f172a; overflow: hidden; color: white; font-family: sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.5); }
-        .code-font { font-family: 'Fira Code', 'Courier New', monospace; }
+        .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8); }
+        .code-font { font-family: 'Fira Code', monospace; }
         textarea { resize: none; spellcheck: false; }
         .mascot-on-map { width: 130px; position: absolute; bottom: 52%; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none; }
-        .nav-btn { background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.2); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; pointer-events: auto; }
+        .nav-btn { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; pointer-events: auto; }
         .nav-btn:hover { background: rgba(34, 211, 238, 0.3); border-color: cyan; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center font-sans">
+<body class="min-h-screen flex items-center justify-center">
+
     <div id="app-container" class="w-full flex items-center justify-center p-4"></div>
 
     <script>
+        // ==========================================
+        // LANDMARK 1: THE CHAPTER VAULT 
+        // ==========================================
+        const CHAPTER_VAULT = {
+            // --- CHAPTER 1: STRINGS ---
+            1: { ch: 1, title: "The Message", goal: "Hello World", explain: "Text in code is called a 'String'." },
+            2: { ch: 1, title: "The Quotes", goal: "\"Hello World\"", explain: "Quotes tell the computer: 'This is a word'." },
+            3: { ch: 1, title: "The Shield", goal: "(\"Hello World\")", explain: "Parentheses hold data for functions." },
+            4: { ch: 1, title: "The Voice", goal: "console.log(\"Hello World\")", explain: "log makes the computer speak!" },
+            5: { ch: 1, title: "CHAPTER 1 EXAM", goal: "console.log(\"Hello World\")", type: "quiz", explain: "Speak 'Hello World' from memory." },
+            
+            // --- CHAPTER 2: VARIABLES ---
+            6: { ch: 2, title: "The Value", goal: "10", explain: "Numbers don't need quotes!" },
+            7: { ch: 2, title: "The Assignment", goal: "power = 10", explain: "The '=' sign stores data into a name." },
+            8: { ch: 2, title: "The Box", goal: "let power = 10", explain: "'let' creates a brand new variable." },
+            9: { ch: 2, title: "Peeking Inside", goal: "console.log(power)", explain: "No quotes needed to peek inside a variable!" },
+            10: { ch: 2, title: "CHAPTER 2 EXAM", goal: "let power = 10", type: "quiz", explain: "Store 10 in a box named 'power'." },
+            
+            // --- CHAPTER 3: MATH FORGE ---
+            11: { ch: 3, title: "Addition", goal: "power + 5", explain: "Use '+' to increase a value." },
+            12: { ch: 3, title: "Subtraction", goal: "power - 2", explain: "Use '-' to decrease a value." },
+            13: { ch: 3, title: "Multiplication", goal: "power * 2", explain: "In code, '*' means multiply." },
+            14: { ch: 3, title: "Update Box", goal: "power = 20", explain: "No 'let' needed to update an old box." },
+            15: { ch: 3, title: "Total Math", goal: "let total = 5 + 5", explain: "Do math and save it in a new box." },
+            16: { ch: 3, title: "Health Loss", goal: "let health = 10 - 2", explain: "Create 'health' using subtraction." },
+            17: { ch: 3, title: "Double DMG", goal: "let damage = 5 * 2", explain: "Create 'damage' using multiplication." },
+            18: { ch: 3, title: "Mixed Math", goal: "total = power + 5", explain: "Add a variable and a number together." },
+            19: { ch: 3, title: "Alchemist", goal: "final = power + total", explain: "Add two variables to get a result." },
+            20: { ch: 3, title: "CHAPTER 3 EXAM", goal: "let final = power + 5", type: "quiz", explain: "Create 'final' using 'power' + 5." },
+
+            // --- CHAPTER 4: THE GATEKEEPER ---
+            21: { ch: 4, title: "The Question", goal: "power > 5", explain: "The '>' symbol asks: 'Is it greater than?'" },
+            22: { ch: 4, title: "The Gate", goal: "if (power > 5)", explain: "An 'if' starts a decision gate." },
+            23: { ch: 4, title: "The Truth", goal: "true", explain: "If a question is right, the answer is 'true'." },
+            24: { ch: 4, title: "The Lie", goal: "false", explain: "If a question is wrong, the answer is 'false'." },
+            25: { ch: 4, title: "The Check", goal: "health < 5", explain: "Check if health is less than (<) 5." },
+            26: { ch: 4, title: "Equal Check", goal: "power === 10", explain: "We use THREE equals to ask: 'Is it exactly 10?'" },
+            27: { ch: 4, title: "The Else", goal: "else", explain: "The 'else' keyword handles the 'wrong' answer." },
+            28: { ch: 4, title: "Opening {", goal: "{", explain: "The curly bracket starts the list of actions." },
+            29: { ch: 4, title: "Closing }", goal: "}", explain: "The closing bracket ends the list of actions." },
+            30: { ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "Write the 'if' gate to check if power is > 5." },
+
+            // --- FUTURE CHAPTER PLACEHOLDER (Paste Chapter 5 here) ---
+            /* 31: { ch: 5, title: "Upcoming...", goal: "", explain: "Loading new lessons..." },
+            */
+        };
+
+        // ==========================================
+        // LANDMARK 2: THE GAME ENGINE
+        // ==========================================
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
           authDomain: "codequest-c1da5.firebaseapp.com",
@@ -38,137 +89,104 @@
         let userData = { mascot: "", language: "", currentLevel: 1, coins: 0 };
         let viewingLevel = 1;
 
-        const LESSON_DATA = {
-            1: { ch: 1, title: "The Message", goal: "Hello World", type: "learn", explain: "Every spell starts with a message. In code, we call plain text a 'String'." },
-            2: { ch: 1, title: "The Quotes", goal: "\"Hello World\"", type: "learn", explain: "Computer's aren't smart! We use double quotes to tell it: 'This is a word, not a command'." },
-            3: { ch: 1, title: "The Shield", goal: "(\"Hello World\")", type: "learn", explain: "Parentheses act like a container. They hold the data we want to send to a function." },
-            4: { ch: 1, title: "The Voice", goal: "console.log(\"Hello World\")", type: "learn", explain: "The 'console.log' command is the voice of the computer. It tells it to speak whatever is in the shield!" },
-            5: { ch: 1, title: "CHAPTER 1 EXAM", goal: "console.log(\"Hello World\")", type: "quiz", explain: "Prove you can speak the 'Hello World' spell from memory!" },
-            6: { ch: 2, title: "The Value", goal: "10", type: "learn", explain: "Numbers are different than words. They don't need quotes because the computer already knows what they are!" },
-            7: { ch: 2, title: "The Assignment", goal: "power = 10", type: "learn", explain: "The '=' sign is a teleporter. It takes the value on the right and puts it into the name on the left." },
-            8: { ch: 2, title: "The Box", goal: "let power = 10", type: "learn", explain: "The keyword 'let' tells the computer: 'Hey! Create a new empty box for me to use'." },
-            9: { ch: 2, title: "Peeking Inside", goal: "console.log(power)", type: "learn", explain: "To see a variable, we put the name in the log. Notice: NO QUOTES! We want the data inside, not the word 'power'." },
-            10: { ch: 2, title: "CHAPTER 2 EXAM", goal: "let power = 10", type: "quiz", explain: "Create a box named 'power' and store the number 10 inside." },
-            11: { ch: 3, title: "The Modifier", goal: "power + 5", type: "learn", explain: "We can use '+' to add values. This calculates a new total without changing the original box yet." },
-            12: { ch: 3, title: "The Subtractor", goal: "power - 2", type: "learn", explain: "The '-' sign decreases values. Useful for health bars and losing items!" },
-            13: { ch: 3, title: "The Multiplier", goal: "power * 2", type: "learn", explain: "In code, we use '*' for multiplication. It's the 'star' key!" },
-            14: { ch: 3, title: "The Update", goal: "power = 20", type: "learn", explain: "You only use 'let' ONCE to create the box. To change it later, just use the name!" },
-            15: { ch: 3, title: "New Result", goal: "let total = 5 + 5", type: "learn", explain: "We can do math and save the answer into a brand new box at the same time." },
-            16: { ch: 3, title: "The Health Drop", goal: "let health = 10 - 2", type: "learn", explain: "Let's create a health box and calculate the starting amount with subtraction." },
-            17: { ch: 3, title: "Double Damage", goal: "let damage = 5 * 2", type: "learn", hint: "Store 5 * 2 in 'damage'.", explain: "Math works exactly the same when storing it in a new name." },
-            18: { ch: 3, title: "The Mix", goal: "total = power + 5", type: "learn", explain: "You can mix variable names and numbers! The computer peeks in 'power' and adds 5." },
-            19: { ch: 3, title: "Double Variable", goal: "final = power + total", type: "learn", explain: "Advanced Alchemy! You can add two variables together to get a final result." },
-            20: { ch: 3, title: "CHAPTER 3 EXAM", goal: "let final = power + 5", type: "quiz", explain: "Recall: Create a new box 'final' and fill it with the value of 'power' + 5." }
-        };
+        window.onload = () => { renderLogin(); };
 
-        window.onload = () => {
+        function renderLogin() {
             document.getElementById('app-container').innerHTML = `
                 <div class="glass p-8 rounded-[2.5rem] text-center max-w-md w-full border-t-4 border-cyan-400">
                     <h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
                     <button onclick="login()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl hover:scale-105 transition-all">CONTINUE WITH GOOGLE</button>
                 </div>`;
-        };
+        }
 
         function login() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then(res => checkProgress(res.user.uid));
-        }
-
-        function checkProgress(uid) {
-            db.collection("users").doc(uid).get().then(doc => {
-                if (doc.exists && doc.data().setupComplete) {
-                    userData = doc.data(); viewingLevel = userData.currentLevel; goToMap();
-                } else goToMascotSelection();
+            auth.signInWithPopup(provider).then(res => {
+                db.collection("users").doc(res.user.uid).get().then(doc => {
+                    if (doc.exists && doc.data().setupComplete) {
+                        userData = doc.data(); viewingLevel = userData.currentLevel; goToMap();
+                    } else renderMascotChoice();
+                });
             });
         }
 
-        function goToMascotSelection() {
+        function renderMascotChoice() {
             document.getElementById('app-container').innerHTML = `
                 <div class="text-center w-full max-w-4xl">
-                    <h2 class="text-4xl font-black mb-8 uppercase tracking-widest">Select Partner</h2>
+                    <h2 class="text-4xl font-black mb-8">SELECT PARTNER</h2>
                     <div class="grid grid-cols-2 gap-8">
-                        <div onclick="setHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 group">
+                        <div onclick="finishSetup('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 group">
                             <img src="dragon.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-all"><p class="text-2xl font-black text-cyan-400">CINDER</p>
                         </div>
-                        <div onclick="setHero('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 group">
+                        <div onclick="finishSetup('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 group">
                             <img src="unicorn.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-all"><p class="text-2xl font-black text-fuchsia-400">SPARKLE</p>
                         </div>
                     </div>
                 </div>`;
         }
 
-        function setHero(h) { userData.mascot = h; showLang(); }
-
-        function showLang() {
+        function finishSetup(m) {
+            userData.mascot = m;
             document.getElementById('app-container').innerHTML = `
                 <div class="text-center max-w-lg w-full">
-                    <h2 class="text-4xl font-black mb-8 uppercase">Choose Quest</h2>
-                    <div class="space-y-4">
-                        <button onclick="saveAll('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg">JAVASCRIPT</button>
-                        <button onclick="saveAll('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg">PYTHON</button>
-                    </div>
+                    <h2 class="text-4xl font-black mb-8 uppercase tracking-tighter">Choose Your Quest</h2>
+                    <button onclick="saveLang('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl mb-4 hover:brightness-110">JAVASCRIPT</button>
+                    <button onclick="saveLang('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl hover:brightness-110">PYTHON</button>
                 </div>`;
         }
 
-        function saveAll(l) {
+        function saveLang(l) {
             userData.language = l; userData.currentLevel = 1; viewingLevel = 1;
             db.collection("users").doc(auth.currentUser.uid).set({
                 mascot: userData.mascot, chosenLanguage: l, currentLevel: 1, coins: 0, setupComplete: true
             }, { merge: true }).then(goToMap);
         }
 
-        function moveMap(dir) {
-            const next = viewingLevel + dir;
-            if (next >= 1 && next <= userData.currentLevel) { viewingLevel = next; goToMap(); }
-        }
-
         function goToMap() {
-            const lsn = LESSON_DATA[viewingLevel] || { title: "QUEST COMPLETE", ch: "End" };
+            const lsn = CHAPTER_VAULT[viewingLevel] || { title: "COMING SOON", ch: "End" };
             document.getElementById('app-container').innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;">
-                    <img src="${userData.mascot}.png" class="mascot-on-map drop-shadow-2xl">
+                    <img src="${userData.mascot}.png" class="mascot-on-map">
                     <div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none">
-                        <button onclick="moveMap(-1)" class="nav-btn ${viewingLevel > 1 ? '' : 'opacity-0 pointer-events-none'}">⬅️</button>
-                        <button onclick="moveMap(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? '' : 'opacity-0 pointer-events-none'}">➡️</button>
+                        <button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button>
+                        <button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button>
                     </div>
-                    <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 border-t border-white/10 flex items-center px-12 justify-between z-20">
-                        <div class="flex items-center gap-8">
-                            <div class="w-16 h-16 bg-cyan-500/20 rounded-full border-2 border-cyan-400 overflow-hidden"><img src="${userData.mascot}.png" class="w-full h-full object-contain"></div>
-                            <div class="flex flex-col"><span class="text-[10px] text-slate-500 font-black tracking-widest uppercase">Chapter ${lsn.ch}</span><span class="text-2xl font-black text-white">Lvl ${viewingLevel}</span></div>
-                            <div class="flex items-center gap-2 ml-4"><span class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</span></div>
+                    <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20">
+                        <div class="flex items-center gap-6">
+                            <img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400">
+                            <div><p class="text-[10px] text-slate-500 font-bold uppercase">Chapter ${lsn.ch}</p><p class="text-2xl font-black">Level ${viewingLevel}</p></div>
                         </div>
-                        <button onclick="startLesson()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg shadow-[0_0_20px_cyan]">START LEVEL ${viewingLevel}</button>
+                        <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg shadow-[0_0_20px_cyan]">START QUEST</button>
                     </div>
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-20">
-                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_40px_cyan] flex items-center justify-center"><span class="text-4xl font-black text-white">${viewingLevel}</span></div>
-                        <p class="text-white font-black mt-4 neon-text tracking-widest uppercase">${lsn.title}</p>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_30px_cyan] flex items-center justify-center font-black text-4xl">${viewingLevel}</div>
+                        <p class="mt-4 font-black neon-text uppercase tracking-widest">${lsn.title}</p>
                     </div>
                 </div>`;
         }
 
-        function startLesson() {
-            const l = LESSON_DATA[viewingLevel];
+        function viewDir(d) { viewingLevel += d; goToMap(); }
+
+        function startQuest() {
+            const l = CHAPTER_VAULT[viewingLevel];
             document.getElementById('app-container').innerHTML = `
                 <div class="glass p-10 rounded-[3rem] w-full max-w-5xl shadow-2xl flex flex-col gap-6 border-b-8 ${l.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'}">
-                    <div class="flex justify-between items-start text-white">
+                    <div class="flex justify-between items-start">
                         <div class="max-w-xl">
-                            <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Chapter ${l.ch}</span>
-                            <h2 class="text-3xl font-black uppercase tracking-tighter">${l.title}</h2>
-                            <div class="mt-4 p-4 bg-white/5 rounded-xl border-l-4 border-cyan-400 italic text-slate-200">
-                                "${l.explain}"
-                            </div>
+                            <span class="text-xs font-bold text-cyan-400 uppercase">Chapter ${l.ch}</span>
+                            <h2 class="text-3xl font-black uppercase mb-4">${l.title}</h2>
+                            <div class="p-4 bg-white/5 rounded-xl border-l-4 border-cyan-400 italic text-slate-200">"${l.explain}"</div>
                         </div>
-                        <img src="${userData.mascot}.png" class="w-24 drop-shadow-xl">
+                        <img src="${userData.mascot}.png" class="w-24">
                     </div>
                     <div class="grid grid-cols-2 gap-8">
-                        <div class="space-y-4">
-                            <div class="bg-black/90 p-4 rounded-2xl"><textarea id="ed" class="w-full h-32 bg-transparent py-2 text-cyan-300 code-font text-lg outline-none" placeholder="// Type answer here..."></textarea></div>
-                            <button onclick="valid()" class="w-full ${l.type === 'quiz' ? 'bg-red-500' : 'bg-cyan-500'} text-slate-900 font-black py-4 rounded-2xl shadow-lg">EXECUTE SPELL</button>
-                            <button onclick="goToMap()" class="w-full text-slate-500 text-xs font-black uppercase">Exit Quest</button>
+                        <div>
+                            <textarea id="ed" class="w-full h-32 bg-black/90 p-4 text-cyan-300 code-font text-lg rounded-2xl outline-none mb-4" placeholder="// Type answer here..."></textarea>
+                            <button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl">EXECUTE</button>
                         </div>
-                        <div class="bg-white/5 rounded-[2rem] p-8 border border-white/10 text-center flex flex-col justify-center">
-                            <h3 class="text-xs font-black text-slate-500 mb-4 uppercase tracking-widest">Target Goal:</h3>
-                            ${l.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">RECALL FROM MEMORY!</p>' : `<code class="text-2xl text-white font-mono font-black">${l.goal}</code>`}
+                        <div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center">
+                            <p class="text-xs font-bold text-slate-500 mb-2 uppercase">Target Goal:</p>
+                            ${l.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">MEMORY CHALLENGE!</p>' : `<code class="text-2xl font-black">${l.goal}</code>`}
                         </div>
                     </div>
                 </div>`;
@@ -176,21 +194,22 @@
 
         function valid() {
             const i = document.getElementById('ed').value.trim().replace(/\s/g, "");
-            const g = LESSON_DATA[viewingLevel].goal.replace(/\s/g, "");
+            const g = CHAPTER_VAULT[viewingLevel].goal.replace(/\s/g, "");
             if (i === g) {
-                if (viewingLevel === userData.currentLevel) up(userData.currentLevel + 1, 100);
-                else { alert("Review Complete!"); goToMap(); }
-            } else alert("Incorrect. Double check your syntax!");
+                if (viewingLevel === userData.currentLevel) {
+                    db.collection("users").doc(auth.currentUser.uid).update({ currentLevel: viewingLevel + 1, coins: firebase.firestore.FieldValue.increment(100) }).then(() => {
+                        userData.currentLevel++; viewingLevel++; userData.coins += 100; renderSuccess();
+                    });
+                } else goToMap();
+            } else alert("Try again! Watch your syntax.");
         }
 
-        function up(n, c) {
-            db.collection("users").doc(auth.currentUser.uid).update({ currentLevel: n, coins: firebase.firestore.FieldValue.increment(c) }).then(() => {
-                userData.currentLevel = n; viewingLevel = n; userData.coins = (userData.coins || 0) + c;
-                document.getElementById('app-container').innerHTML = `<div class="text-center animate-bounce">
-                    <h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black text-white neon-text uppercase tracking-tighter">SUCCESS!</h2>
-                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl">CONTINUE QUEST</button>
+        function renderSuccess() {
+            document.getElementById('app-container').innerHTML = `
+                <div class="text-center animate-bounce">
+                    <h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black uppercase neon-text tracking-tighter">SUCCESS!</h2>
+                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl">CONTINUE</button>
                 </div>`;
-            });
         }
     </script>
 </body>
