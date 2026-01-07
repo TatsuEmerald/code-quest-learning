@@ -57,9 +57,78 @@
             28: { ch: 4, title: "Opening {", goal: "{", explain: "The '{' starts a list of actions for the Gate." },
             29: { ch: 4, title: "Closing }", goal: "}", explain: "The '}' ends the list of actions." },
             30: { ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "Write an 'if' gate to check if power is > 5." },
-            // === CHAPTER 5 DATA BLOCK PLACEHOLDER ===
-            // Paste Levels 31-40 here...
-        };
+
+            // --- CHAPTER 5: THE LOOP SPIRAL ---
+            31: { ch: 5, title: "The Repeat", goal: "for", explain: "A 'for' loop tells the computer to repeat an action. It's the engine of automation!" },
+            32: { ch: 5, title: "The Counter", goal: "let i = 0", explain: "Loops need a counter to track laps. We usually start at 0 using 'let i = 0'." },
+            33: { ch: 5, title: "The Limit", goal: "i < 10", explain: "The loop needs a stop sign. This checks if the counter is still under the limit." },
+            34: { ch: 5, title: "The Step", goal: "i++", explain: "The 'i++' command adds 1 to the counter every time the loop finishes a lap." },
+            35: { ch: 5, title: "The Full Loop", goal: "for (let i = 0; i < 5; i++)", explain: "Let's build the full loop header! Start at 0, stop at 5, count by 1s." },
+            36: { ch: 5, title: "Loop Body", goal: "{", explain: "Just like 'if' gates, loops use '{' to hold the actions being repeated." },
+            37: { ch: 5, title: "Loop Action", goal: "console.log(i)", explain: "Let's print the counter inside the loop to see it count in the console!" },
+            38: { ch: 5, title: "Loop Closure", goal: "}", explain: "Close the loop block with '}' to finish the repeating spell." },
+            39: { ch: 5, title: "Infinite Danger", goal: "i++", explain: "If you forget to increase the counter (i++), the loop never ends and crashes the program!" },
+            40: { ch: 5, title: "CHAPTER 5 EXAM", goal: "for (let i = 0; i < 10; i++)", type: "quiz", explain: "RECALL: Write a loop header that counts from 0 to 10." },
+
+            // --- CHAPTER 6: THE LOGIC ARRAY ---
+            41: { ch: 6, title: "The List", goal: "[ ]", explain: "An Array is a list of items. We use square brackets [ ] to create one." },
+            42: { ch: 6, title: "Inventory", goal: "['Sword', 'Shield']", explain: "Words in a list still need quotes! Separate items with a comma." },
+            43: { ch: 6, title: "Storing Lists", goal: "let items = ['Sword', 'Shield']", explain: "You can store a whole list into a single variable box!" },
+            44: { ch: 6, title: "The Index", goal: "0", explain: "Computers start counting lists at 0. The first item is always at spot 0." },
+            45: { ch: 6, title: "Grabbing Items", goal: "items[0]", explain: "To get the first item, use the list name and the index in brackets." },
+            46: { ch: 6, title: "List Length", goal: "items.length", explain: "The '.length' command tells you how many items are in the list." },
+            47: { ch: 6, title: "Adding Items", goal: "items.push('Potion')", explain: "Use '.push' to add a new item to the end of your list." },
+            48: { ch: 6, title: "Removing Items", goal: "items.pop()", explain: "Use '.pop' to remove the very last item from the list." },
+            49: { ch: 6, title: "Changing Items", goal: "items[0] = 'Axe'", explain: "You can overwrite an item by assigning a new value to its index." },
+            50: { ch: 6, title: "CHAPTER 6 EXAM", goal: "items[1]", type: "quiz", explain: "RECALL: How do you grab the SECOND item in the 'items' list?" },
+
+            // --- CHAPTER 7: THE FUNCTION FORGE ---
+            51: { ch: 7, title: "The Spellbook", goal: "function", explain: "A Function is a saved block of code you can use over and over." },
+            52: { ch: 7, title: "Naming Spells", goal: "function castSpell()", explain: "Give your function a name followed by (). This is where it's defined." },
+            53: { ch: 7, title: "Spell Body", goal: "{", explain: "Functions use curly brackets to hold the actions they perform." },
+            54: { ch: 7, title: "The Action", goal: "console.log('ZAP!')", explain: "Let's put a log inside our function so it speaks when used." },
+            55: { ch: 7, title: "The Closure", goal: "}", explain: "Finish your function definition with a closing bracket." },
+            56: { ch: 7, title: "The Call", goal: "castSpell()", explain: "To actually use the spell, type its name with (). This is 'calling' it." },
+            57: { ch: 7, title: "Reuse", goal: "castSpell()", explain: "Call it again! That's the power of functions—write once, use forever." },
+            58: { ch: 7, title: "Organization", goal: "function", explain: "Functions help keep your code clean by grouping actions together." },
+            59: { ch: 7, title: "Order Matters", goal: "function", explain: "You usually define a function at the top so you can call it later." },
+            60: { ch: 7, title: "CHAPTER 7 EXAM", goal: "castSpell()", type: "quiz", explain: "RECALL: How do you 'call' a function named castSpell?" },
+
+            // --- CHAPTER 8: THE PARAMETER BRIDGE ---
+            61: { ch: 8, title: "The Input", goal: "(name)", explain: "Parameters are values you send INTO a function. Put a name in the ( )." },
+            62: { ch: 8, title: "Multiple Inputs", goal: "(name, power)", explain: "You can send multiple pieces of data by using a comma." },
+            63: { ch: 8, title: "Using Inputs", goal: "console.log(name)", explain: "Inside the function, you use the parameter name like a variable." },
+            64: { ch: 8, title: "The Setup", goal: "function greet(name)", explain: "Let's create a function that takes a name as an input." },
+            65: { ch: 8, title: "Sending Data", goal: "greet('Cinder')", explain: "When you call the function, put the actual data in the ( )." },
+            66: { ch: 8, title: "Data Match", goal: "greet", explain: "The value 'Cinder' gets teleported into the 'name' parameter." },
+            67: { ch: 8, title: "Flexibility", goal: "greet('Sparkle')", explain: "Now the same function can greet someone else just by changing the input!" },
+            68: { ch: 8, title: "Math Inputs", goal: "function add(a, b)", explain: "Functions can take numbers as parameters to do math." },
+            69: { ch: 8, title: "The Math Call", goal: "add(5, 10)", explain: "Send two numbers into the 'add' function." },
+            70: { ch: 8, title: "CHAPTER 8 EXAM", goal: "function blast(power)", type: "quiz", explain: "Create a function 'blast' that takes one parameter called 'power'." },
+
+            // --- CHAPTER 9: THE RETURN PORTAL ---
+            71: { ch: 9, title: "The Result", goal: "return", explain: "The 'return' keyword sends a value BACK from a function to where it was called." },
+            72: { ch: 9, title: "The Hand-off", goal: "return total", explain: "This sends the contents of the 'total' box out of the function." },
+            73: { ch: 9, title: "The Exit", goal: "return", explain: "When a function hits 'return', it stops immediately. It's the exit door." },
+            74: { ch: 9, title: "Saving Returns", goal: "let result = add(5, 5)", explain: "You can catch a returned value and store it in a new variable!" },
+            75: { ch: 9, title: "The Calculation", goal: "return a + b", explain: "You can return the result of a math problem directly." },
+            76: { ch: 9, title: "The Checker", goal: "return true", explain: "Functions can also return Booleans to tell you if a check passed." },
+            77: { ch: 9, title: "The Logic Return", goal: "return", explain: "Imagine a function 'isAlive' that returns true or false." },
+            78: { ch: 9, title: "No Return", goal: "undefined", explain: "If a function has no return, it gives back 'undefined' (nothing)." },
+            79: { ch: 9, title: "Multiple Returns", goal: "if", explain: "You can use 'if' to return different things in different situations." },
+            80: { ch: 9, title: "CHAPTER 9 EXAM", goal: "return power", type: "quiz", explain: "RECALL: What keyword sends a value out of a function?" },
+
+            // --- CHAPTER 10: THE MASTER EXAM ---
+            81: { ch: 10, title: "Review: Variables", goal: "let energy = 100", explain: "Final Review! Create your energy box." },
+            82: { ch: 10, title: "Review: Math", goal: "energy = energy - 10", explain: "Reduce your energy by 10." },
+            83: { ch: 10, title: "Review: Arrays", goal: "let pouch = []", explain: "Create an empty inventory pouch list." },
+            84: { ch: 10, title: "Review: Push", goal: "pouch.push('Gem')", explain: "Put a Gem in your pouch." },
+            85: { ch: 10, title: "Review: Loops", goal: "for (let i = 0; i < 3; i++)", explain: "Start a loop that runs 3 times." },
+            86: { ch: 10, title: "Review: Ifs", goal: "if (energy > 0)", explain: "Check if you still have energy." },
+            87: { ch: 10, title: "Review: Functions", goal: "function play()", explain: "Define the main game function." },
+            88: { ch: 10, title: "Review: Params", goal: "function heal(amt)", explain: "Define a heal function with an amount." },
+            89: { ch: 10, title: "Review: Returns", goal: "return health", explain: "Return the final health value." },
+            90: { ch: 10, title: "FINAL CHALLENGE", goal: "console.log('Master')", type: "quiz", explain: "Speak your final rank: 'Master'" }
 
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
@@ -134,5 +203,3 @@
     </script>
 </body>
 </html>
-
-
