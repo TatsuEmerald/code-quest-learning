@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: HUD Restored</title>
+    <title>CodeQuest: Full Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -20,13 +20,9 @@
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center">
-
     <div id="app-container" class="w-full flex items-center justify-center p-4"></div>
 
     <script>
-        // ==========================================
-        // LANDMARK 1: THE CHAPTER VAULT 
-        // ==========================================
         const CHAPTER_VAULT = {
             1: { ch: 1, title: "The Message", goal: "Hello World", explain: "Text in code is called a 'String'." },
             2: { ch: 1, title: "The Quotes", goal: "\"Hello World\"", explain: "Quotes tell the computer: 'This is a word'." },
@@ -48,30 +44,19 @@
             18: { ch: 3, title: "Mixed Math", goal: "total = power + 5", explain: "Add a variable and a number together." },
             19: { ch: 3, title: "Alchemist", goal: "final = power + total", explain: "Add two variables to get a result." },
             20: { ch: 3, title: "CHAPTER 3 EXAM", goal: "let final = power + 5", type: "quiz", explain: "Create 'final' using 'power' + 5." },
-          								
-
-	// --- CHAPTER 4: THE GATEKEEPER ---
-            21: { ch: 4, title: "The Evaluation", goal: "power > 5", explain: "The '>' symbol evaluates a condition. It checks if the left side is greater than the right to see if the statement is true or false." },
-            22: { ch: 4, title: "The Condition", goal: "if (power > 5)", explain: "An 'if' statement looks at the evaluation. If the result is true, the 'Gate' opens and the code inside runs." },
-            23: { ch: 4, title: "The Truth", goal: "true", explain: "When a comparison like 10 > 5 is checked, the computer returns the value 'true'." },
-            24: { ch: 4, title: "The Lie", goal: "false", explain: "When a comparison like 1 > 5 is checked, the computer returns the value 'false'." },
-            25: { ch: 4, title: "The Less-Than Check", goal: "health < 5", explain: "The '<' symbol evaluates if the left side is less than the right side." },
-            26: { ch: 4, title: "Strict Equality", goal: "power === 10", explain: "To check if a value is EXACTLY equal, we use '==='. One '=' sets a value, three '===' asks a question!" },
-            27: { ch: 4, title: "The Alternative", goal: "else", explain: "The 'else' keyword tells the computer what to do if the 'if' condition results in 'false'." },
-            28: { ch: 4, title: "Code Blocks", goal: "{", explain: "The opening curly bracket '{' starts a block of code that belongs to the gate." },
-            29: { ch: 4, title: "Closing Blocks", goal: "}", explain: "The closing curly bracket '}' tells the computer that the block of code is finished." },
-            30: { ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "Create an 'if' statement that evaluates if 'power' is greater than 5." },
-
-            // --- FUTURE CHAPTER PLACEHOLDER ---
-            /* 31: { ch: 5, title: "Upcoming...", goal: "", explain: "Loading new lessons..." },
-            */
-        }; 
-	
+            21: { ch: 4, title: "The Evaluation", goal: "power > 5", explain: "The '>' symbol evaluates if the left is greater than the right." },
+            22: { ch: 4, title: "The Condition", goal: "if (power > 5)", explain: "An 'if' statement runs code only if the result is true." },
+            23: { ch: 4, title: "The Truth", goal: "true", explain: "If a comparison is right, the computer results in 'true'." },
+            24: { ch: 4, title: "The Lie", goal: "false", explain: "If a comparison is wrong, the computer results in 'false'." },
+            25: { ch: 4, title: "The Less-Than", goal: "health < 5", explain: "The '<' symbol evaluates if the left is less than the right." },
+            26: { ch: 4, title: "Strict Equality", goal: "power === 10", explain: "Use '===' to evaluate if values are exactly equal." },
+            27: { ch: 4, title: "The Alternative", goal: "else", explain: "'else' handles what to do when the 'if' is false." },
+            28: { ch: 4, title: "Opening {", goal: "{", explain: "The '{' starts a list of actions for the Gate." },
+            29: { ch: 4, title: "Closing }", goal: "}", explain: "The '}' ends the list of actions." },
+            30: { ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "Write an 'if' gate to check if power is > 5." }
+            // === CHAPTER 5 PLACEHOLDER WILL GO HERE ===
         };
 
-        // ==========================================
-        // LANDMARK 2: THE GAME ENGINE
-        // ==========================================
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
           authDomain: "codequest-c1da5.firebaseapp.com",
@@ -83,127 +68,50 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
         let userData = { mascot: "", language: "", currentLevel: 1, coins: 0 };
         let viewingLevel = 1;
 
-        window.onload = () => { renderLogin(); };
-
-        function renderLogin() {
-            document.getElementById('app-container').innerHTML = `
-                <div class="glass p-8 rounded-[2.5rem] text-center max-w-md w-full border-t-4 border-cyan-400">
-                    <h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
-                    <button onclick="login()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl hover:scale-105 transition-all">CONTINUE WITH GOOGLE</button>
-                </div>`;
-        }
+        window.onload = () => {
+            document.getElementById('app-container').innerHTML = `<div class="glass p-8 rounded-[2.5rem] text-center max-w-md w-full border-t-4 border-cyan-400"><h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1><button onclick="login()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl">CONTINUE WITH GOOGLE</button></div>`;
+        };
 
         function login() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).then(res => {
                 db.collection("users").doc(res.user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().setupComplete) {
-                        userData = doc.data(); viewingLevel = userData.currentLevel; goToMap();
-                    } else renderMascotChoice();
+                    if (doc.exists && doc.data().setupComplete) { userData = doc.data(); viewingLevel = userData.currentLevel; goToMap(); } 
+                    else renderMascotChoice();
                 });
             });
         }
 
         function renderMascotChoice() {
-            document.getElementById('app-container').innerHTML = `
-                <div class="text-center w-full max-w-4xl">
-                    <h2 class="text-4xl font-black mb-8">SELECT PARTNER</h2>
-                    <div class="grid grid-cols-2 gap-8">
-                        <div onclick="finishSetup('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 group">
-                            <img src="dragon.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-all"><p class="text-2xl font-black text-cyan-400">CINDER</p>
-                        </div>
-                        <div onclick="finishSetup('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 group">
-                            <img src="unicorn.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-all"><p class="text-2xl font-black text-fuchsia-400">SPARKLE</p>
-                        </div>
-                    </div>
-                </div>`;
+            document.getElementById('app-container').innerHTML = `<div class="text-center w-full max-w-4xl"><h2 class="text-4xl font-black mb-8">SELECT PARTNER</h2><div class="grid grid-cols-2 gap-8"><div onclick="finishSetup('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer"><img src="dragon.png" class="w-64 mx-auto mb-4"><p class="text-2xl font-black text-cyan-400">CINDER</p></div><div onclick="finishSetup('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer"><img src="unicorn.png" class="w-64 mx-auto mb-4"><p class="text-2xl font-black text-fuchsia-400">SPARKLE</p></div></div></div>`;
         }
 
         function finishSetup(m) {
             userData.mascot = m;
-            document.getElementById('app-container').innerHTML = `
-                <div class="text-center max-w-lg w-full">
-                    <h2 class="text-4xl font-black mb-8">Choose Language</h2>
-                    <button onclick="saveLang('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl mb-4">JAVASCRIPT</button>
-                    <button onclick="saveLang('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl">PYTHON</button>
-                </div>`;
+            document.getElementById('app-container').innerHTML = `<div class="text-center max-w-lg w-full"><h2 class="text-4xl font-black mb-8">CHOOSE LANGUAGE</h2><button onclick="saveLang('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl mb-4">JAVASCRIPT</button><button onclick="saveLang('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl">PYTHON</button></div>`;
         }
 
         function saveLang(l) {
             userData.language = l; userData.currentLevel = 1; viewingLevel = 1;
-            db.collection("users").doc(auth.currentUser.uid).set({
-                mascot: userData.mascot, chosenLanguage: l, currentLevel: 1, coins: 0, setupComplete: true
-            }, { merge: true }).then(goToMap);
+            db.collection("users").doc(auth.currentUser.uid).set({ mascot: userData.mascot, chosenLanguage: l, currentLevel: 1, coins: 0, setupComplete: true }, { merge: true }).then(goToMap);
         }
 
         function goToMap() {
             const lsn = CHAPTER_VAULT[viewingLevel] || { title: "COMING SOON", ch: 0 };
-            
-            // Logic for percentage in current chapter
-            const chapterLevels = Object.values(CHAPTER_VAULT).filter(l => l.ch === lsn.ch);
-            const firstLevelInCh = Math.min(...Object.keys(CHAPTER_VAULT).filter(k => CHAPTER_VAULT[k].ch === lsn.ch));
-            const progressInCh = ((viewingLevel - firstLevelInCh + 1) / chapterLevels.length) * 100;
-
-            document.getElementById('app-container').innerHTML = `
-                <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;">
-                    
-                    <img src="${userData.mascot}.png" class="mascot-on-map">
-
-                    <div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none">
-                        <button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button>
-                        <button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button>
-                    </div>
-
-                    <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20">
-                        <div class="flex items-center gap-6">
-                            <img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400">
-                            <div>
-                                <p class="text-[10px] text-slate-500 font-bold uppercase">Chapter ${lsn.ch} - ${Math.round(progressInCh)}%</p>
-                                <p class="text-2xl font-black">Level ${viewingLevel}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-8">
-                            <div class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</div>
-                            <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg">START QUEST</button>
-                        </div>
-                    </div>
-
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30">
-                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_30px_cyan] flex items-center justify-center font-black text-4xl">${viewingLevel}</div>
-                        <p class="mt-4 font-black neon-text uppercase tracking-widest">${lsn.title}</p>
-                    </div>
-                </div>`;
+            const chLvl = Object.values(CHAPTER_VAULT).filter(l => l.ch === lsn.ch);
+            const start = Math.min(...Object.keys(CHAPTER_VAULT).filter(k => CHAPTER_VAULT[k].ch === lsn.ch));
+            const pct = ((viewingLevel - start + 1) / (chLvl.length || 1)) * 100;
+            document.getElementById('app-container').innerHTML = `<div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;"><img src="${userData.mascot}.png" class="mascot-on-map"><div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none"><button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button><button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button></div><div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20"><div class="flex items-center gap-6"><img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400"><div><p class="text-[10px] text-slate-500 font-bold uppercase">Chapter ${lsn.ch} - ${Math.round(pct)}%</p><p class="text-2xl font-black">Level ${viewingLevel}</p></div></div><div class="flex items-center gap-8"><div class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</div><button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg">START QUEST</button></div></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30"><div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white flex items-center justify-center font-black text-4xl">${viewingLevel}</div><p class="mt-4 font-black neon-text uppercase">${lsn.title}</p></div></div>`;
         }
 
         function viewDir(d) { viewingLevel += d; goToMap(); }
 
         function startQuest() {
             const l = CHAPTER_VAULT[viewingLevel];
-            document.getElementById('app-container').innerHTML = `
-                <div class="glass p-10 rounded-[3rem] w-full max-w-5xl shadow-2xl flex flex-col gap-6 border-b-8 ${l.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'}">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-xl">
-                            <span class="text-xs font-bold text-cyan-400 uppercase">Chapter ${l.ch}</span>
-                            <h2 class="text-3xl font-black uppercase mb-4">${l.title}</h2>
-                            <div class="p-4 bg-white/5 rounded-xl border-l-4 border-cyan-400 italic text-slate-200">"${l.explain}"</div>
-                        </div>
-                        <img src="${userData.mascot}.png" class="w-24">
-                    </div>
-                    <div class="grid grid-cols-2 gap-8">
-                        <div>
-                            <textarea id="ed" class="w-full h-32 bg-black/90 p-4 text-cyan-300 code-font text-lg rounded-2xl outline-none mb-4" placeholder="// Type here..."></textarea>
-                            <button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl">EXECUTE</button>
-                        </div>
-                        <div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center">
-                            <p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest">Target Goal:</p>
-                            ${l.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">MEMORY CHALLENGE!</p>' : `<code class="text-2xl font-black">${l.goal}</code>`}
-                        </div>
-                    </div>
-                </div>`;
+            document.getElementById('app-container').innerHTML = `<div class="glass p-10 rounded-[3rem] w-full max-w-5xl flex flex-col gap-6 border-b-8 ${l.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'}"><div class="flex justify-between items-start"><div class="max-w-xl"><span class="text-xs font-bold text-cyan-400 uppercase">Chapter ${l.ch}</span><h2 class="text-3xl font-black uppercase mb-4">${l.title}</h2><div class="p-4 bg-white/5 rounded-xl border-l-4 border-cyan-400 italic text-slate-200">"${l.explain}"</div></div><img src="${userData.mascot}.png" class="w-24"></div><div class="grid grid-cols-2 gap-8"><div><textarea id="ed" class="w-full h-32 bg-black/90 p-4 text-cyan-300 code-font text-lg rounded-2xl outline-none mb-4" placeholder="// Type here..."></textarea><button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl">EXECUTE</button></div><div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center"><p class="text-xs font-bold text-slate-500 mb-2 uppercase">Target Goal:</p>${l.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">MEMORY CHALLENGE!</p>' : `<code class="text-2xl font-black">${l.goal}</code>`}</div></div><button onclick="goToMap()" class="text-slate-500 text-xs font-black uppercase mt-4">Exit Quest</button></div>`;
         }
 
         function valid() {
@@ -211,22 +119,13 @@
             const g = CHAPTER_VAULT[viewingLevel].goal.replace(/\s/g, "");
             if (i === g) {
                 if (viewingLevel === userData.currentLevel) {
-                    db.collection("users").doc(auth.currentUser.uid).update({ 
-                        currentLevel: viewingLevel + 1, 
-                        coins: firebase.firestore.FieldValue.increment(100) 
-                    }).then(() => {
-                        userData.currentLevel++; viewingLevel++; userData.coins = (userData.coins || 0) + 100; renderSuccess();
-                    });
+                    db.collection("users").doc(auth.currentUser.uid).update({ currentLevel: viewingLevel + 1, coins: firebase.firestore.FieldValue.increment(100) }).then(() => { userData.currentLevel++; viewingLevel++; userData.coins += 100; renderSuccess(); });
                 } else goToMap();
             } else alert("Try again! Watch your syntax.");
         }
 
         function renderSuccess() {
-            document.getElementById('app-container').innerHTML = `
-                <div class="text-center animate-bounce">
-                    <h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black uppercase neon-text">SUCCESS!</h2>
-                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black">CONTINUE</button>
-                </div>`;
+            document.getElementById('app-container').innerHTML = `<div class="text-center animate-bounce"><h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black uppercase neon-text">SUCCESS!</h2><button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black">CONTINUE</button></div>`;
         }
     </script>
 </body>
