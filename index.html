@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Level 9 Fix</title>
+    <title>CodeQuest: The Math Forge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -14,44 +14,13 @@
         .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.5); }
         .code-font { font-family: 'Fira Code', 'Courier New', monospace; }
         textarea { resize: none; spellcheck: false; }
-
-        .mascot-on-map {
-            width: 130px;
-            position: absolute;
-            bottom: 52%; 
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            pointer-events: none;
-        }
-        
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
+        .mascot-on-map { width: 130px; position: absolute; bottom: 52%; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none; }
+        .nav-btn { background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.2); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; pointer-events: auto; }
         .nav-btn:hover { background: rgba(34, 211, 238, 0.3); border-color: cyan; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center font-sans">
-
-    <div id="app-container" class="w-full flex items-center justify-center p-4">
-        <div class="glass p-8 rounded-[2.5rem] shadow-2xl max-w-md mx-auto w-full text-center border-t-4 border-cyan-400 relative z-50">
-            <h1 class="text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
-            <p class="text-slate-300 mb-8 font-medium italic">Learning that sticks.</p>
-            <button onclick="loginWithGoogle()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition-all cursor-pointer relative z-[60]">
-                <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="w-6 h-6">
-                CONTINUE WITH GOOGLE
-            </button>
-        </div>
-    </div>
+    <div id="app-container" class="w-full flex items-center justify-center p-4"></div>
 
     <script>
         const firebaseConfig = {
@@ -60,10 +29,8 @@
           projectId: "codequest-c1da5",
           storageBucket: "codequest-c1da5.firebasestorage.app",
           messagingSenderId: "726116988970",
-          appId: "1:726116988970:web:e8681978587c9d36a3eb53",
-          measurementId: "G-4C6PC61SK7"
+          appId: "1:726116988970:web:e8681978587c9d36a3eb53"
         };
-
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -78,176 +45,142 @@
             4: { ch: 1, title: "The Voice", goal: "console.log(\"Hello World\")", type: "learn", hint: "Add console.log at the start." },
             5: { ch: 1, title: "CHAPTER 1 EXAM", goal: "console.log(\"Hello World\")", type: "quiz", hint: "RECALL: Full command!" },
             6: { ch: 2, title: "The Value", goal: "10", type: "learn", hint: "Type the number 10." },
-            7: { ch: 2, title: "The Name", goal: "power = 10", type: "learn", hint: "Name it 'power' using =" },
+            7: { ch: 2, title: "The Assignment", goal: "power = 10", type: "learn", hint: "Name it 'power' using =" },
             8: { ch: 2, title: "The Box", goal: "let power = 10", type: "learn", hint: "Add 'let' at the start." },
-            9: { ch: 2, title: "Peeking Inside", goal: "console.log(power)", type: "learn", hint: "To see the number inside the power box, type: console.log(power) -- NO QUOTES!" },
-            10: { ch: 2, title: "CHAPTER 2 EXAM", goal: "let power = 10", type: "quiz", hint: "RECALL: Create 'power' set to 10." }
+            9: { ch: 2, title: "Peeking Inside", goal: "console.log(power)", type: "learn", hint: "Print the power variable (No Quotes!)" },
+            10: { ch: 2, title: "CHAPTER 2 EXAM", goal: "let power = 10", type: "quiz", hint: "RECALL: Create 'power' set to 10." },
+            // CHAPTER 3
+            11: { ch: 3, title: "The Modifier", goal: "power + 5", type: "learn", hint: "Type: power + 5 to increase the value!" },
+            12: { ch: 3, title: "The Update", goal: "power = 20", type: "learn", hint: "Change power to 20. (Notice: No 'let' when updating!)" },
+            13: { ch: 3, title: "The Result", goal: "let total = 5 + 5", type: "learn", hint: "Store math results in a new variable 'total'." },
+            14: { ch: 3, title: "The Mix", goal: "total = power + 5", type: "learn", hint: "Set total equal to power plus 5." },
+            15: { ch: 3, title: "CHAPTER 3 EXAM", goal: "let total = power + 5", type: "quiz", hint: "RECALL: Create 'total' using math and 'power'." }
         };
 
-        function loginWithGoogle() {
+        window.onload = () => {
+            document.getElementById('app-container').innerHTML = `
+                <div class="glass p-8 rounded-[2.5rem] text-center max-w-md w-full border-t-4 border-cyan-400">
+                    <h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
+                    <button onclick="login()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl hover:scale-105 transition-all">CONTINUE WITH GOOGLE</button>
+                </div>`;
+        };
+
+        function login() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((res) => checkUserProgress(res.user.uid)).catch((e) => alert(e.message));
+            auth.signInWithPopup(provider).then(res => checkProgress(res.user.uid));
         }
 
-        function checkUserProgress(uid) {
-            db.collection("users").doc(uid).get().then((doc) => {
+        function checkProgress(uid) {
+            db.collection("users").doc(uid).get().then(doc => {
                 if (doc.exists && doc.data().setupComplete) {
-                    userData = doc.data();
-                    viewingLevel = userData.currentLevel;
-                    goToMap();
-                } else {
-                    goToMascotSelection();
-                }
+                    userData = doc.data(); viewingLevel = userData.currentLevel; goToMap();
+                } else goToMascotSelection();
             });
         }
 
         function goToMascotSelection() {
-            const container = document.getElementById('app-container');
-            container.innerHTML = `<div class="text-center w-full max-w-4xl relative z-50">
-                <h2 class="text-4xl font-black mb-8 uppercase">SELECT PARTNER</h2>
-                <div class="grid grid-cols-2 gap-8">
-                    <div onclick="selectHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 group transition-all">
-                        <img src="dragon.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <p class="text-2xl font-black text-cyan-400 uppercase">Brave Cinder</p>
-                    </div>
-                    <div onclick="selectHero('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 group transition-all">
-                        <img src="unicorn.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <p class="text-2xl font-black text-fuchsia-400 uppercase">Magic Sparkle</p>
-                    </div>
-                </div>
-            </div>`;
-        }
-
-        function selectHero(hero) { userData.mascot = hero; goToLanguageSelection(); }
-
-        function goToLanguageSelection() {
-            const container = document.getElementById('app-container');
-            container.innerHTML = `<div class="text-center max-w-lg mx-auto w-full text-white relative z-50">
-                <h2 class="text-4xl font-black mb-8 uppercase">Choose Quest</h2>
-                <div class="space-y-4">
-                    <button onclick="finalSave('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-lg">JAVASCRIPT</button>
-                    <button onclick="finalSave('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg">PYTHON</button>
-                </div>
-            </div>`;
-        }
-
-        function finalSave(lang) {
-            userData.language = lang;
-            userData.currentLevel = 1;
-            viewingLevel = 1;
-            db.collection("users").doc(auth.currentUser.uid).set({
-                mascot: userData.mascot, chosenLanguage: lang, currentLevel: 1, coins: 0, setupComplete: true
-            }, { merge: true }).then(() => goToMap());
-        }
-
-        function changeMapView(dir) {
-            const next = viewingLevel + dir;
-            if (next >= 1 && next <= userData.currentLevel) {
-                viewingLevel = next;
-                goToMap();
-            }
-        }
-
-        function goToMap() {
-            const container = document.getElementById('app-container');
-            const lesson = LESSON_DATA[viewingLevel] || { title: "QUEST COMPLETE", ch: "End" };
-            const showBack = viewingLevel > 1;
-            const showFwd = viewingLevel < userData.currentLevel;
-
-            container.innerHTML = `
-                <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" 
-                     style="background-image: url('map.png'); background-color: #0f172a;">
-                    
-                    <img src="${userData.mascot}.png" class="mascot-on-map drop-shadow-2xl">
-
-                    <div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none">
-                        <button onclick="changeMapView(-1)" class="nav-btn pointer-events-auto ${showBack ? 'opacity-100' : 'opacity-0'}">⬅️</button>
-                        <button onclick="changeMapView(1)" class="nav-btn pointer-events-auto ${showFwd ? 'opacity-100' : 'opacity-0'}">➡️</button>
-                    </div>
-
-                    <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 border-t border-white/10 flex items-center px-12 justify-between z-20">
-                        <div class="flex items-center gap-8">
-                            <div class="w-16 h-16 bg-cyan-500/20 rounded-full border-2 border-cyan-400 overflow-hidden"><img src="${userData.mascot}.png" class="w-full h-full object-contain"></div>
-                            <div class="flex flex-col"><span class="text-[10px] text-slate-500 font-black tracking-widest uppercase">Chapter ${lesson.ch}</span><span class="text-2xl font-black text-white">Lvl ${viewingLevel}</span></div>
-                            <div class="flex items-center gap-2 ml-4"><span class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</span></div>
+            document.getElementById('app-container').innerHTML = `
+                <div class="text-center w-full max-w-4xl">
+                    <h2 class="text-4xl font-black mb-8">SELECT PARTNER</h2>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div onclick="setHero('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-cyan-400 group">
+                            <img src="dragon.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-all"><p class="text-2xl font-black text-cyan-400">CINDER</p>
                         </div>
-                        <button onclick="startCurrentLesson()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg hover:scale-105 shadow-[0_0_20px_cyan]">
-                            START LEVEL ${viewingLevel}
-                        </button>
-                    </div>
-
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-20">
-                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_40px_cyan] flex items-center justify-center">
-                            <span class="text-4xl font-black text-white">${viewingLevel}</span>
+                        <div onclick="setHero('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer hover:border-fuchsia-400 group">
+                            <img src="unicorn.png" class="w-64 mx-auto mb-4 group-hover:scale-110 transition-all"><p class="text-2xl font-black text-fuchsia-400">SPARKLE</p>
                         </div>
-                        <p class="text-white font-black mt-4 neon-text tracking-widest uppercase">${lesson.title}</p>
                     </div>
                 </div>`;
         }
 
-        function startCurrentLesson() {
-            const lesson = LESSON_DATA[viewingLevel];
-            const container = document.getElementById('app-container');
-            container.innerHTML = `
-                <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 ${lesson.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'} relative z-50">
-                    <div class="flex justify-between items-start text-white">
-                        <div>
-                            <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Chapter ${lesson.ch}</span>
-                            <h2 class="text-3xl font-black uppercase tracking-tighter">${lesson.title}</h2>
-                            <p class="text-slate-300 text-sm mt-1 italic">${lesson.hint}</p>
+        function setHero(h) { userData.mascot = h; showLang(); }
+
+        function showLang() {
+            document.getElementById('app-container').innerHTML = `
+                <div class="text-center max-w-lg w-full">
+                    <h2 class="text-4xl font-black mb-8 uppercase">Choose Quest</h2>
+                    <div class="space-y-4">
+                        <button onclick="saveAll('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl text-xl">JAVASCRIPT</button>
+                        <button onclick="saveAll('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl text-xl">PYTHON</button>
+                    </div>
+                </div>`;
+        }
+
+        function saveAll(l) {
+            userData.language = l; userData.currentLevel = 1; viewingLevel = 1;
+            db.collection("users").doc(auth.currentUser.uid).set({
+                mascot: userData.mascot, chosenLanguage: l, currentLevel: 1, coins: 0, setupComplete: true
+            }, { merge: true }).then(goToMap);
+        }
+
+        function moveMap(dir) {
+            const next = viewingLevel + dir;
+            if (next >= 1 && next <= userData.currentLevel) { viewingLevel = next; goToMap(); }
+        }
+
+        function goToMap() {
+            const lsn = LESSON_DATA[viewingLevel] || { title: "QUEST COMPLETE", ch: "End" };
+            document.getElementById('app-container').innerHTML = `
+                <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;">
+                    <img src="${userData.mascot}.png" class="mascot-on-map drop-shadow-2xl">
+                    <div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none">
+                        <button onclick="moveMap(-1)" class="nav-btn ${viewingLevel > 1 ? '' : 'opacity-0 pointer-events-none'}">⬅️</button>
+                        <button onclick="moveMap(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? '' : 'opacity-0 pointer-events-none'}">➡️</button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 border-t border-white/10 flex items-center px-12 justify-between z-20">
+                        <div class="flex items-center gap-8">
+                            <div class="w-16 h-16 bg-cyan-500/20 rounded-full border-2 border-cyan-400 overflow-hidden"><img src="${userData.mascot}.png" class="w-full h-full object-contain"></div>
+                            <div class="flex flex-col"><span class="text-[10px] text-slate-500 font-black tracking-widest uppercase">Chapter ${lsn.ch}</span><span class="text-2xl font-black text-white">Lvl ${viewingLevel}</span></div>
+                            <div class="flex items-center gap-2 ml-4"><span class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</span></div>
                         </div>
+                        <button onclick="startLesson()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg hover:scale-105 shadow-[0_0_20px_cyan]">START LEVEL ${viewingLevel}</button>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-20">
+                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_40px_cyan] flex items-center justify-center"><span class="text-4xl font-black text-white">${viewingLevel}</span></div>
+                        <p class="text-white font-black mt-4 neon-text tracking-widest uppercase">${lsn.title}</p>
+                    </div>
+                </div>`;
+        }
+
+        function startLesson() {
+            const l = LESSON_DATA[viewingLevel];
+            document.getElementById('app-container').innerHTML = `
+                <div class="glass p-10 rounded-[3rem] w-full max-w-4xl shadow-2xl flex flex-col gap-6 border-b-8 ${l.type === 'quiz' ? 'border-red-500' : 'border-cyan-500'}">
+                    <div class="flex justify-between items-start text-white">
+                        <div><span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Chapter ${l.ch}</span><h2 class="text-3xl font-black uppercase tracking-tighter">${l.title}</h2><p class="text-slate-300 text-sm mt-1 italic">${l.hint}</p></div>
                         <img src="${userData.mascot}.png" class="w-24 drop-shadow-xl">
                     </div>
                     <div class="grid grid-cols-2 gap-8">
                         <div class="space-y-4">
-                            <div class="bg-black/90 p-4 rounded-2xl">
-                                <textarea id="fullEditor" class="w-full h-40 bg-transparent py-4 text-cyan-300 code-font text-lg outline-none" placeholder="// Type here..."></textarea>
-                            </div>
-                            <button onclick="validateLesson()" class="w-full ${lesson.type === 'quiz' ? 'bg-red-500' : 'bg-cyan-500'} text-slate-900 font-black py-4 rounded-2xl shadow-lg uppercase tracking-widest">Run Code</button>
+                            <div class="bg-black/90 p-4 rounded-2xl"><textarea id="ed" class="w-full h-40 bg-transparent py-4 text-cyan-300 code-font text-lg outline-none" placeholder="// Type here..."></textarea></div>
+                            <button onclick="valid()" class="w-full ${l.type === 'quiz' ? 'bg-red-500' : 'bg-cyan-500'} text-slate-900 font-black py-4 rounded-2xl shadow-lg">RUN CODE</button>
                             <button onclick="goToMap()" class="w-full text-slate-500 text-xs font-black uppercase">Exit</button>
                         </div>
                         <div class="bg-white/5 rounded-[2rem] p-8 border border-white/10 text-center flex flex-col justify-center">
                             <h3 class="text-xs font-black text-slate-500 mb-4 uppercase">Target Goal:</h3>
-                            ${lesson.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">RECALL FROM MEMORY!</p>' : `<code class="text-2xl text-white font-mono font-black">${lesson.goal}</code>`}
+                            ${l.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">MEMORY CHALLENGE!</p>' : `<code class="text-2xl text-white font-mono font-black">${l.goal}</code>`}
                         </div>
                     </div>
                 </div>`;
         }
 
-        function validateLesson() {
-            const input = document.getElementById('fullEditor').value.trim().replace(/\s/g, "");
-            const goal = LESSON_DATA[viewingLevel].goal.replace(/\s/g, "");
-            if (input === goal) {
-                if (viewingLevel === userData.currentLevel) {
-                    updateProgress(userData.currentLevel + 1, 100);
-                } else {
-                    alert("Skill Reviewed!");
-                    goToMap();
-                }
-            } else {
-                alert("Incorrect. Double check your typing! (Hint: No quotes for the variable name inside parentheses)");
-            }
+        function valid() {
+            const i = document.getElementById('ed').value.trim().replace(/\s/g, "");
+            const g = LESSON_DATA[viewingLevel].goal.replace(/\s/g, "");
+            if (i === g) {
+                if (viewingLevel === userData.currentLevel) up(userData.currentLevel + 1, 100);
+                else { alert("Review Complete!"); goToMap(); }
+            } else alert("Incorrect. Try again!");
         }
 
-        function updateProgress(nextLvl, coins) {
-            db.collection("users").doc(auth.currentUser.uid).update({
-                currentLevel: nextLvl, coins: firebase.firestore.FieldValue.increment(coins)
-            }).then(() => {
-                userData.currentLevel = nextLvl;
-                viewingLevel = nextLvl;
-                userData.coins = (userData.coins || 0) + coins;
-                showSuccess();
-            });
-        }
-
-        function showSuccess() {
-            const container = document.getElementById('app-container');
-            container.innerHTML = `
-                <div class="text-center animate-bounce relative z-50">
-                    <h1 class="text-9xl mb-6">🧠</h1>
-                    <h2 class="text-5xl font-black text-white neon-text uppercase tracking-tighter">SUCCESS!</h2>
-                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl">CONTINUE</button>
+        function up(n, c) {
+            db.collection("users").doc(auth.currentUser.uid).update({ currentLevel: n, coins: firebase.firestore.FieldValue.increment(c) }).then(() => {
+                userData.currentLevel = n; viewingLevel = n; userData.coins = (userData.coins || 0) + c;
+                document.getElementById('app-container').innerHTML = `<div class="text-center animate-bounce">
+                    <h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black text-white neon-text uppercase tracking-tighter">SUCCESS!</h2>
+                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black">CONTINUE</button>
                 </div>`;
+            });
         }
     </script>
 </body>
