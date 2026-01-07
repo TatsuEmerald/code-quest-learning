@@ -130,6 +130,30 @@
             89: { ch: 10, title: "Review: Returns", goal: "return health", explain: "Return the final health value." },
             90: { ch: 10, title: "FINAL CHALLENGE", goal: "console.log('Master')", type: "quiz", explain: "Speak your final rank: 'Master'" }
 
+            // --- CHAPTER 11: THE DATA OBJECT ---
+            91: { ch: 11, title: "The Object", goal: "{ }", explain: "Objects use curly brackets { } to group related data together into one unit." },
+            92: { ch: 11, title: "Key and Value", goal: "name: 'Cinder'", explain: "Inside objects, we use a 'key' and a 'value' separated by a colon (:)." },
+            93: { ch: 11, title: "Grouping Data", goal: "{ name: 'Cinder', lvl: 1 }", explain: "Separate different pieces of data with a comma inside the brackets." },
+            94: { ch: 11, title: "Storing Objects", goal: "let hero = { hp: 100 }", explain: "You can store a whole object into a variable name like 'hero'." },
+            95: { ch: 11, title: "Dot Notation", goal: "hero.hp", explain: "To 'peek' inside an object, use a dot. 'hero.hp' gets the value of hp." },
+            96: { ch: 11, title: "Updating Objects", goal: "hero.hp = 90", explain: "Use the dot to change a value inside. This reduces the hero's hp to 90." },
+            97: { ch: 11, title: "Adding Keys", goal: "hero.mp = 50", explain: "You can add a brand new category (mp) just by using the dot and assigning a value." },
+            98: { ch: 11, title: "Nested Objects", goal: "hero.stats.atk", explain: "Objects can live inside objects! This is how complex game data is organized." },
+            99: { ch: 11, title: "The Inventory Link", goal: "hero.items = []", explain: "You can even put an Array (list) inside an object key!" },
+            100: { ch: 11, title: "CHAPTER 11 EXAM", goal: "hero.hp", type: "quiz", explain: "RECALL: How do you access the 'hp' value inside the 'hero' object?" }
+        }; // <--- THIS IS THE CLOSING BRACKET FOR THE VAULT
+
+        // ==========================================
+        // LANDMARK 2: THE GAME ENGINE
+        // ==========================================
+        const firebaseConfig = {
+          apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
+          authDomain: "codequest-c1da5.firebaseapp.com",
+          projectId: "codequest-c1da5",
+          storageBucket: "codequest-c1da5.firebasestorage.app",
+          messagingSenderId: "726116988970",
+          appId: "1:726116988970:web:e8681978587c9d36a3eb53"
+        };
         const firebaseConfig = {
           apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig",
           authDomain: "codequest-c1da5.firebaseapp.com",
@@ -203,3 +227,4 @@
     </script>
 </body>
 </html>
+
