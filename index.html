@@ -79,13 +79,42 @@
         function saveM(m) { userData.mascot = m; userData.currentLevel = 1; viewingLevel = 1; db.collection("users").doc(auth.currentUser.uid).set({ mascot: m, currentLevel: 1, coins: 0, setupComplete: true }, { merge: true }).then(goToMap); }
         
         function goToMap() { 
-            const l = CHAPTER_VAULT[viewingLevel] || { title: "SOON", ch: 0, b: 1 }; 
-            const chLvl = Object.values(CHAPTER_VAULT).filter(x => x.ch === l.ch && x.b === l.b);
-            const start = Math.min(...Object.keys(CHAPTER_VAULT).filter(k => CHAPTER_VAULT[k].ch === l.ch && CHAPTER_VAULT[k].b === l.b));
-            const pct = ((viewingLevel - start + 1) / (chLvl.length || 1)) * 100;
-            const rank = l.b === 1 ? "Apprentice" : "Journeyman";
+            const l = CHAPTER_VAULT[viewingLevel] || { title: "SOON", ch: 1, b: 1 }; 
+            // Fix: Default to Book 1 and Chapter 1 if data is missing to avoid "Infinity%"
+            const currentBook = l.b || 1;
+            const currentCh = l.ch || 1;
 
-            document.getElementById('app-container').innerHTML = `<div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;"><img src="${userData.mascot}.png" class="mascot-on-map"><div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none"><button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button><button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button></div><div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20"><div class="flex items-center gap-6"><img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400"><div><p class="text-[10px] text-slate-500 font-bold">${rank.toUpperCase()} - CH ${l.ch} (${Math.round(pct)}%)</p><p class="text-2xl font-black">LVL ${viewingLevel}</p></div></div><div class="flex items-center gap-8"><div class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</div><button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black">START</button></div></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30"><div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white flex items-center justify-center font-black text-4xl">${viewingLevel}</div><p class="mt-4 font-black neon-text uppercase">${l.title}</p></div></div>`;
+            const chLvl = Object.values(CHAPTER_VAULT).filter(x => (x.ch || 1) === currentCh && (x.b || 1) === currentBook);
+            const start = Math.min(...Object.keys(CHAPTER_VAULT).filter(k => (CHAPTER_VAULT[k].ch || 1) === currentCh && (CHAPTER_VAULT[k].b || 1) === currentBook));
+            
+            const pct = ((viewingLevel - start + 1) / (chLvl.length || 1)) * 100;
+            const rank = currentBook === 1 ? "Apprentice" : "Journeyman";
+
+            document.getElementById('app-container').innerHTML = `
+                <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;">
+                    <img src="${userData.mascot}.png" class="mascot-on-map">
+                    <div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none">
+                        <button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button>
+                        <button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20">
+                        <div class="flex items-center gap-6">
+                            <img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400">
+                            <div>
+                                <p class="text-[10px] text-slate-500 font-bold">${rank.toUpperCase()} - CH ${currentCh} (${Math.round(pct)}%)</p>
+                                <p class="text-2xl font-black">LVL ${viewingLevel}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-8">
+                            <div class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</div>
+                            <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black">START</button>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30">
+                        <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white flex items-center justify-center font-black text-4xl">${viewingLevel}</div>
+                        <p class="mt-4 font-black neon-text uppercase">${l.title}</p>
+                    </div>
+                </div>`;
         }
         
         function viewDir(d) { viewingLevel += d; goToMap(); }
