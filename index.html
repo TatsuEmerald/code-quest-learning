@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Modular Odyssey</title>
+    <title>CodeQuest: Layer Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -14,7 +14,18 @@
         .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8); }
         .code-font { font-family: 'Fira Code', monospace; }
         textarea { resize: none; spellcheck: false; }
-        .mascot-on-map { width: 130px; position: absolute; bottom: 52%; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none; }
+        
+        /* Mascot Layer - Stays behind */
+        .mascot-on-map { 
+            width: 130px; 
+            position: absolute; 
+            bottom: 52%; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 5; 
+            pointer-events: none; 
+        }
+
         .nav-btn { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; pointer-events: auto; }
         .nav-btn:hover { background: rgba(34, 211, 238, 0.3); border-color: cyan; }
     </style>
@@ -28,21 +39,16 @@
         // LANDMARK 1: THE CHAPTER VAULT 
         // ==========================================
         const CHAPTER_VAULT = {
-            // --- CHAPTER 1: STRINGS ---
             1: { ch: 1, title: "The Message", goal: "Hello World", explain: "Text in code is called a 'String'." },
             2: { ch: 1, title: "The Quotes", goal: "\"Hello World\"", explain: "Quotes tell the computer: 'This is a word'." },
             3: { ch: 1, title: "The Shield", goal: "(\"Hello World\")", explain: "Parentheses hold data for functions." },
             4: { ch: 1, title: "The Voice", goal: "console.log(\"Hello World\")", explain: "log makes the computer speak!" },
             5: { ch: 1, title: "CHAPTER 1 EXAM", goal: "console.log(\"Hello World\")", type: "quiz", explain: "Speak 'Hello World' from memory." },
-            
-            // --- CHAPTER 2: VARIABLES ---
             6: { ch: 2, title: "The Value", goal: "10", explain: "Numbers don't need quotes!" },
             7: { ch: 2, title: "The Assignment", goal: "power = 10", explain: "The '=' sign stores data into a name." },
             8: { ch: 2, title: "The Box", goal: "let power = 10", explain: "'let' creates a brand new variable." },
             9: { ch: 2, title: "Peeking Inside", goal: "console.log(power)", explain: "No quotes needed to peek inside a variable!" },
             10: { ch: 2, title: "CHAPTER 2 EXAM", goal: "let power = 10", type: "quiz", explain: "Store 10 in a box named 'power'." },
-            
-            // --- CHAPTER 3: MATH FORGE ---
             11: { ch: 3, title: "Addition", goal: "power + 5", explain: "Use '+' to increase a value." },
             12: { ch: 3, title: "Subtraction", goal: "power - 2", explain: "Use '-' to decrease a value." },
             13: { ch: 3, title: "Multiplication", goal: "power * 2", explain: "In code, '*' means multiply." },
@@ -53,8 +59,6 @@
             18: { ch: 3, title: "Mixed Math", goal: "total = power + 5", explain: "Add a variable and a number together." },
             19: { ch: 3, title: "Alchemist", goal: "final = power + total", explain: "Add two variables to get a result." },
             20: { ch: 3, title: "CHAPTER 3 EXAM", goal: "let final = power + 5", type: "quiz", explain: "Create 'final' using 'power' + 5." },
-
-            // --- CHAPTER 4: THE GATEKEEPER ---
             21: { ch: 4, title: "The Question", goal: "power > 5", explain: "The '>' symbol asks: 'Is it greater than?'" },
             22: { ch: 4, title: "The Gate", goal: "if (power > 5)", explain: "An 'if' starts a decision gate." },
             23: { ch: 4, title: "The Truth", goal: "true", explain: "If a question is right, the answer is 'true'." },
@@ -64,11 +68,7 @@
             27: { ch: 4, title: "The Else", goal: "else", explain: "The 'else' keyword handles the 'wrong' answer." },
             28: { ch: 4, title: "Opening {", goal: "{", explain: "The curly bracket starts the list of actions." },
             29: { ch: 4, title: "Closing }", goal: "}", explain: "The closing bracket ends the list of actions." },
-            30: { ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "Write the 'if' gate to check if power is > 5." },
-
-            // --- FUTURE CHAPTER PLACEHOLDER (Paste Chapter 5 here) ---
-            /* 31: { ch: 5, title: "Upcoming...", goal: "", explain: "Loading new lessons..." },
-            */
+            30: { ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "Write the 'if' gate to check if power is > 5." }
         };
 
         // ==========================================
@@ -129,9 +129,9 @@
             userData.mascot = m;
             document.getElementById('app-container').innerHTML = `
                 <div class="text-center max-w-lg w-full">
-                    <h2 class="text-4xl font-black mb-8 uppercase tracking-tighter">Choose Your Quest</h2>
-                    <button onclick="saveLang('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl mb-4 hover:brightness-110">JAVASCRIPT</button>
-                    <button onclick="saveLang('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl hover:brightness-110">PYTHON</button>
+                    <h2 class="text-4xl font-black mb-8">Choose Language</h2>
+                    <button onclick="saveLang('JavaScript')" class="w-full bg-yellow-400 text-slate-900 font-black py-5 rounded-2xl mb-4">JAVASCRIPT</button>
+                    <button onclick="saveLang('Python')" class="w-full bg-blue-500 text-white font-black py-5 rounded-2xl">PYTHON</button>
                 </div>`;
         }
 
@@ -146,19 +146,23 @@
             const lsn = CHAPTER_VAULT[viewingLevel] || { title: "COMING SOON", ch: "End" };
             document.getElementById('app-container').innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;">
+                    
                     <img src="${userData.mascot}.png" class="mascot-on-map">
+
                     <div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none">
                         <button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button>
                         <button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button>
                     </div>
+
                     <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20">
                         <div class="flex items-center gap-6">
                             <img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400">
                             <div><p class="text-[10px] text-slate-500 font-bold uppercase">Chapter ${lsn.ch}</p><p class="text-2xl font-black">Level ${viewingLevel}</p></div>
                         </div>
-                        <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg shadow-[0_0_20px_cyan]">START QUEST</button>
+                        <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg">START QUEST</button>
                     </div>
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30">
                         <div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white shadow-[0_0_30px_cyan] flex items-center justify-center font-black text-4xl">${viewingLevel}</div>
                         <p class="mt-4 font-black neon-text uppercase tracking-widest">${lsn.title}</p>
                     </div>
@@ -181,7 +185,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-8">
                         <div>
-                            <textarea id="ed" class="w-full h-32 bg-black/90 p-4 text-cyan-300 code-font text-lg rounded-2xl outline-none mb-4" placeholder="// Type answer here..."></textarea>
+                            <textarea id="ed" class="w-full h-32 bg-black/90 p-4 text-cyan-300 code-font text-lg rounded-2xl outline-none mb-4" placeholder="// Type here..."></textarea>
                             <button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl">EXECUTE</button>
                         </div>
                         <div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center">
@@ -207,8 +211,8 @@
         function renderSuccess() {
             document.getElementById('app-container').innerHTML = `
                 <div class="text-center animate-bounce">
-                    <h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black uppercase neon-text tracking-tighter">SUCCESS!</h2>
-                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black shadow-2xl">CONTINUE</button>
+                    <h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black uppercase neon-text">SUCCESS!</h2>
+                    <button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black">CONTINUE</button>
                 </div>`;
         }
     </script>
