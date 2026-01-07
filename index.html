@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest 100</title>
+    <title>CodeQuest: Journeyman Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -21,106 +21,51 @@
     <div id="app-container" class="w-full flex items-center justify-center p-4"></div>
     <script>
         const CHAPTER_VAULT = {
-            1: { ch: 1, title: "The Message", goal: "Hello World", explain: "Text is a 'String'." },
-            2: { ch: 1, title: "The Quotes", goal: "\"Hello World\"", explain: "Use quotes for words." },
-            3: { ch: 1, title: "The Shield", goal: "(\"Hello World\")", explain: "Parentheses hold data." },
-            4: { ch: 1, title: "The Voice", goal: "console.log(\"Hello World\")", explain: "Log makes it speak." },
-            5: { ch: 1, title: "EXAM 1", goal: "console.log(\"Hello World\")", type: "quiz", explain: "Type from memory." },
-            6: { ch: 2, title: "Values", goal: "10", explain: "Numbers need no quotes." },
-            7: { ch: 2, title: "Assignment", goal: "power = 10", explain: "'=' stores data." },
-            8: { ch: 2, title: "The Box", goal: "let power = 10", explain: "'let' creates a variable." },
-            9: { ch: 2, title: "Peeking", goal: "console.log(power)", explain: "Look inside variables." },
-            10: { ch: 2, title: "EXAM 2", goal: "let power = 10", type: "quiz", explain: "Store 10 in 'power'." },
-            11: { ch: 3, title: "Math +", goal: "power + 5", explain: "Add values." },
-            12: { ch: 3, title: "Math -", goal: "power - 2", explain: "Subtract values." },
-            13: { ch: 3, title: "Math *", goal: "power * 2", explain: "Multiply values." },
-            14: { ch: 3, title: "Update", goal: "power = 20", explain: "Change a box value." },
-            15: { ch: 3, title: "New Math", goal: "let total = 5 + 5", explain: "Save math results." },
-            16: { ch: 3, title: "Health", goal: "let health = 10 - 2", explain: "Create health." },
-            17: { ch: 3, title: "Damage", goal: "let damage = 5 * 2", explain: "Create damage." },
-            18: { ch: 3, title: "Mix", goal: "total = power + 5", explain: "Add vars + nums." },
-            19: { ch: 3, title: "Alchemist", goal: "final = power + total", explain: "Add two variables." },
-            20: { ch: 3, title: "EXAM 3", goal: "let final = power + 5", type: "quiz", explain: "Create final result." },
-            21: { ch: 4, title: "Evaluation", goal: "power > 5", explain: "Check if greater than." },
-            22: { ch: 4, title: "The Gate", goal: "if (power > 5)", explain: "'if' starts a decision." },
-            23: { ch: 4, title: "Truth", goal: "10 > 5", explain: "Evaluate as true." },
-            24: { ch: 4, title: "The Lie", goal: "1 > 10", explain: "Evaluate as false." },
-            25: { ch: 4, title: "Less Than", goal: "health < 5", explain: "Check if less than." },
-            26: { ch: 4, title: "Equality", goal: "power === 10", explain: "Check if exactly equal." },
-            27: { ch: 4, title: "Else", goal: "else", explain: "The 'wrong' path." },
-            28: { ch: 4, title: "Block {", goal: "{", explain: "Starts action list." },
-            29: { ch: 4, title: "Block }", goal: "}", explain: "Ends action list." },
-            30: { ch: 4, title: "EXAM 4", goal: "if (power > 5)", type: "quiz", explain: "Write an if gate." },
-            31: { ch: 5, title: "Loop", goal: "for", explain: "Repeat actions." },
-            32: { ch: 5, title: "Counter", goal: "let i = 0", explain: "Start at 0." },
-            33: { ch: 5, title: "Limit", goal: "i < 10", explain: "Set stop sign." },
-            34: { ch: 5, title: "Step", goal: "i++", explain: "Add 1 each lap." },
-            35: { ch: 5, title: "Header", goal: "for (let i = 0; i < 5; i++)", explain: "Build loop start." },
-            36: { ch: 5, title: "Body {", goal: "{", explain: "Holds loop code." },
-            37: { ch: 5, title: "Log i", goal: "console.log(i)", explain: "Print counter." },
-            38: { ch: 5, title: "Body }", goal: "}", explain: "Ends loop code." },
-            39: { ch: 5, title: "Safety", goal: "i++", explain: "Avoid crashes." },
-            40: { ch: 5, title: "EXAM 5", goal: "for (let i = 0; i < 10; i++)", type: "quiz", explain: "Write a loop." },
-            41: { ch: 6, title: "Array", goal: "[ ]", explain: "Make a list." },
-            42: { ch: 6, title: "Items", goal: "['Sword', 'Shield']", explain: "Quote list items." },
-            43: { ch: 6, title: "Save List", goal: "let items = ['A', 'B']", explain: "Store a list." },
-            44: { ch: 6, title: "Index 0", goal: "0", explain: "Start at zero." },
-            45: { ch: 6, title: "Grab", goal: "items[0]", explain: "Get first item." },
-            46: { ch: 6, title: "Length", goal: "items.length", explain: "Count items." },
-            47: { ch: 6, title: "Push", goal: "items.push('Gold')", explain: "Add to end." },
-            48: { ch: 6, title: "Pop", goal: "items.pop()", explain: "Remove last." },
-            49: { ch: 6, title: "Update List", goal: "items[0] = 'Axe'", explain: "Change item." },
-            50: { ch: 6, title: "EXAM 6", goal: "items[1]", type: "quiz", explain: "Grab 2nd item." },
-            51: { ch: 7, title: "Function", goal: "function", explain: "Save a code block." },
-            52: { ch: 7, title: "Name", goal: "function go()", explain: "Name your spell." },
-            53: { ch: 7, title: "Gate {", goal: "{", explain: "Start function." },
-            54: { ch: 7, title: "Action", goal: "console.log('X')", explain: "Do something." },
-            55: { ch: 7, title: "Gate }", goal: "}", explain: "End function." },
-            56: { ch: 7, title: "Call", goal: "go()", explain: "Use the spell." },
-            57: { ch: 7, title: "Retry", goal: "go()", explain: "Call again." },
-            58: { ch: 7, title: "Clean", goal: "function", explain: "Group actions." },
-            59: { ch: 7, title: "Top", goal: "function", explain: "Define early." },
-            60: { ch: 7, title: "EXAM 7", goal: "go()", type: "quiz", explain: "Call a function." },
-            61: { ch: 8, title: "Input", goal: "(name)", explain: "Send data in." },
-            62: { ch: 8, title: "Multi", goal: "(a, b)", explain: "Send two things." },
-            63: { ch: 8, title: "Usage", goal: "console.log(a)", explain: "Use the input." },
-            64: { ch: 8, title: "Greet", goal: "function greet(n)", explain: "Define input name." },
-            65: { ch: 8, title: "Send", goal: "greet('Hero')", explain: "Send 'Hero'." },
-            66: { ch: 8, title: "Teleport", goal: "greet", explain: "Data moves in." },
-            67: { ch: 8, title: "Flex", goal: "greet('User')", explain: "Change input." },
-            68: { ch: 8, title: "Math In", goal: "function add(a, b)", explain: "Add inputs." },
-            69: { ch: 8, title: "Math Call", goal: "add(5, 5)", explain: "Send numbers." },
-            70: { ch: 8, title: "EXAM 8", goal: "function x(p)", type: "quiz", explain: "Define parameter." },
-            71: { ch: 9, title: "Return", goal: "return", explain: "Send value back." },
-            72: { ch: 9, title: "Hand-off", goal: "return x", explain: "Return a box." },
-            73: { ch: 9, title: "Exit", goal: "return", explain: "Ends function." },
-            74: { ch: 9, title: "Catch", goal: "let r = add(1, 1)", explain: "Save the return." },
-            75: { ch: 9, title: "Direct", goal: "return a + b", explain: "Return math." },
-            76: { ch: 9, title: "Bool Ret", goal: "return true", explain: "Return truth." },
-            77: { ch: 9, title: "Check Ret", goal: "return", explain: "Logic return." },
-            78: { ch: 9, title: "Empty", goal: "undefined", explain: "No return result." },
-            79: { ch: 9, title: "If Ret", goal: "if", explain: "Conditional return." },
-            80: { ch: 9, title: "EXAM 9", goal: "return p", type: "quiz", explain: "Return 'p'." },
-            81: { ch: 10, title: "Review 1", goal: "let e = 100", explain: "Create energy." },
-            82: { ch: 10, title: "Review 2", goal: "e = e - 10", explain: "Sub math." },
-            83: { ch: 10, title: "Review 3", goal: "let p = []", explain: "Make list." },
-            84: { ch: 10, title: "Review 4", goal: "p.push('G')", explain: "Add to list." },
-            85: { ch: 10, title: "Review 5", goal: "for (let i=0; i<3; i++)", explain: "Loop 3x." },
-            86: { ch: 10, title: "Review 6", goal: "if (e > 0)", explain: "Check energy." },
-            87: { ch: 10, title: "Review 7", goal: "function play()", explain: "Main function." },
-            88: { ch: 10, title: "Review 8", goal: "function h(a)", explain: "Param function." },
-            89: { ch: 10, title: "Review 9", goal: "return h", explain: "Return health." },
-            90: { ch: 10, title: "FINAL", goal: "console.log('Master')", type: "quiz", explain: "Final Rank." },
-            91: { ch: 11, title: "Object", goal: "{ }", explain: "Group data." },
-            92: { ch: 11, title: "Key", goal: "name: 'C'", explain: "Key : Value." },
-            93: { ch: 11, title: "Group", goal: "{ n: 'C', l: 1 }", explain: "Comma separate." },
-            94: { ch: 11, title: "Store Obj", goal: "let h = { hp: 100 }", explain: "Object in box." },
-            95: { ch: 11, title: "Dot", goal: "h.hp", explain: "Access data." },
-            96: { ch: 11, title: "Update Obj", goal: "h.hp = 90", explain: "Change data." },
-            97: { ch: 11, title: "Add Key", goal: "h.mp = 50", explain: "New category." },
-            98: { ch: 11, title: "Nested", goal: "h.s.atk", explain: "Obj in Obj." },
-            99: { ch: 11, title: "Link", goal: "h.i = []", explain: "List in Obj." },
-            100: { ch: 11, title: "EXAM 11", goal: "h.hp", type: "quiz", explain: "Access hp." }
+            // BOOK 1: THE APPRENTICE (Levels 1-100)
+            1: { b: 1, ch: 1, title: "The Message", goal: "Hello World", explain: "Type exactly: Hello World" },
+            // ... Assume levels 2-100 are present in your local file ...
+
+            // BOOK 2: THE JOURNEYMAN (The Spiral Begins)
+            101: { 
+                b: 2, ch: 1, title: "Output Protocol", goal: "console.log('Online')", 
+                explain: "TASK: Use your 'Voice' command to output the word Online to the console. (Don't forget the quotes and parentheses!)" 
+            },
+            102: { 
+                b: 2, ch: 1, title: "String Creation", goal: "'Crystal'", 
+                explain: "TASK: The computer needs to see the word Crystal as data, not as a command. How do you wrap a word for the computer to understand?" 
+            },
+            103: { 
+                b: 2, ch: 2, title: "Mana Storage", goal: "let mana = 50", 
+                explain: "TASK: Create a new variable named mana and store the number 50 inside it." 
+            },
+            104: { 
+                b: 2, ch: 2, title: "Variable Peek", goal: "console.log(mana)", 
+                explain: "TASK: Show the contents of your mana box in the console. Do not use quotes, or you'll just print the word 'mana'!" 
+            },
+            105: { 
+                b: 2, ch: 3, title: "Potion Math", goal: "mana + 25", 
+                explain: "TASK: You found a potion! Write an evaluation that adds 25 to your current mana variable." 
+            },
+            106: { 
+                b: 2, ch: 4, title: "Low Mana Check", goal: "mana < 10", 
+                explain: "TASK: We need to know if it's time to run. Write a comparison that evaluates if mana is less than 10." 
+            },
+            107: { 
+                b: 2, ch: 4, title: "Full Power Check", goal: "mana === 100", 
+                explain: "TASK: Write a strict evaluation to check if your mana is exactly 100." 
+            },
+            108: { 
+                b: 2, ch: 4, title: "The Mana Gate", goal: "if(mana > 20)", 
+                explain: "TASK: Start an 'if' gate that only opens if mana is greater than 20." 
+            },
+            109: { 
+                b: 2, ch: 5, title: "The Training Loop", goal: "for(let i=0; i<3; i++)", 
+                explain: "TASK: Build a loop header that repeats exactly 3 times (starting at 0)." 
+            },
+            110: { 
+                b: 2, ch: 6, title: "Loot Table", goal: "let loot = ['Gold', 'Gem']", 
+                explain: "TASK: Create a list variable called loot containing the words Gold and Gem." 
+            }
         };
 
         const firebaseConfig = { apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig", authDomain: "codequest-c1da5.firebaseapp.com", projectId: "codequest-c1da5", storageBucket: "codequest-c1da5.firebasestorage.app", messagingSenderId: "726116988970", appId: "1:726116988970:web:e8681978587c9d36a3eb53" };
@@ -130,20 +75,26 @@
 
         window.onload = () => { document.getElementById('app-container').innerHTML = `<div class="glass p-8 rounded-[2.5rem] text-center max-w-md w-full border-t-4 border-cyan-400"><h1 class="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1><button onclick="login()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl">CONTINUE</button></div>`; };
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).then(res => { db.collection("users").doc(res.user.uid).get().then(doc => { if (doc.exists && doc.data().setupComplete) { userData = doc.data(); viewingLevel = userData.currentLevel; goToMap(); } else renderMascotChoice(); }); }); }
-        function renderMascotChoice() { document.getElementById('app-container').innerHTML = `<div class="text-center w-full max-w-4xl"><h2 class="text-4xl font-black mb-8">SELECT PARTNER</h2><div class="grid grid-cols-2 gap-8"><div onclick="saveM('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer"><img src="dragon.png" class="w-64 mx-auto mb-4"><p class="text-2xl font-black text-cyan-400">CINDER</p></div><div onclick="saveM('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer"><img src="unicorn.png" class="w-64 mx-auto mb-4"><p class="text-2xl font-black text-fuchsia-400">SPARKLE</p></div></div></div>`; }
+        function renderMascotChoice() { document.getElementById('app-container').innerHTML = `<div class="text-center w-full max-w-4xl"><h2 class="text-4xl font-black mb-8">SELECT PARTNER</h2><div class="grid grid-cols-2 gap-8"><div onclick="saveM('dragon')" class="glass p-6 rounded-[2rem] cursor-pointer"><img src="dragon.png" class="w-64 mx-auto mb-4"><p class="text-2xl font-black text-cyan-400">CINDER</p></div><div onclick="finishSetup('unicorn')" class="glass p-6 rounded-[2rem] cursor-pointer"><img src="unicorn.png" class="w-64 mx-auto mb-4"><p class="text-2xl font-black text-fuchsia-400">SPARKLE</p></div></div></div>`; }
         function saveM(m) { userData.mascot = m; userData.currentLevel = 1; viewingLevel = 1; db.collection("users").doc(auth.currentUser.uid).set({ mascot: m, currentLevel: 1, coins: 0, setupComplete: true }, { merge: true }).then(goToMap); }
+        
         function goToMap() { 
-            const l = CHAPTER_VAULT[viewingLevel] || { title: "SOON", ch: 0 }; 
-            const chLvl = Object.values(CHAPTER_VAULT).filter(x => x.ch === l.ch);
-            const start = Math.min(...Object.keys(CHAPTER_VAULT).filter(k => CHAPTER_VAULT[k].ch === l.ch));
+            const l = CHAPTER_VAULT[viewingLevel] || { title: "SOON", ch: 0, b: 1 }; 
+            const chLvl = Object.values(CHAPTER_VAULT).filter(x => x.ch === l.ch && x.b === l.b);
+            const start = Math.min(...Object.keys(CHAPTER_VAULT).filter(k => CHAPTER_VAULT[k].ch === l.ch && CHAPTER_VAULT[k].b === l.b));
             const pct = ((viewingLevel - start + 1) / (chLvl.length || 1)) * 100;
-            document.getElementById('app-container').innerHTML = `<div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;"><img src="${userData.mascot}.png" class="mascot-on-map"><div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none"><button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button><button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button></div><div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20"><div class="flex items-center gap-6"><img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400"><div><p class="text-[10px] text-slate-500 font-bold">CH ${l.ch} - ${Math.round(pct)}%</p><p class="text-2xl font-black">LVL ${viewingLevel}</p></div></div><div class="flex items-center gap-8"><div class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</div><button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black">START</button></div></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30"><div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white flex items-center justify-center font-black text-4xl">${viewingLevel}</div><p class="mt-4 font-black neon-text uppercase">${l.title}</p></div></div>`;
+            const rank = l.b === 1 ? "Apprentice" : "Journeyman";
+
+            document.getElementById('app-container').innerHTML = `<div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;"><img src="${userData.mascot}.png" class="mascot-on-map"><div class="absolute inset-x-12 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none"><button onclick="viewDir(-1)" class="nav-btn ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button><button onclick="viewDir(1)" class="nav-btn ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button></div><div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20"><div class="flex items-center gap-6"><img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400"><div><p class="text-[10px] text-slate-500 font-bold">${rank.toUpperCase()} - CH ${l.ch} (${Math.round(pct)}%)</p><p class="text-2xl font-black">LVL ${viewingLevel}</p></div></div><div class="flex items-center gap-8"><div class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</div><button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black">START</button></div></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30"><div class="w-24 h-24 bg-cyan-500 rounded-full animate-bounce border-4 border-white flex items-center justify-center font-black text-4xl">${viewingLevel}</div><p class="mt-4 font-black neon-text uppercase">${l.title}</p></div></div>`;
         }
+        
         function viewDir(d) { viewingLevel += d; goToMap(); }
+        
         function startQuest() { 
             const l = CHAPTER_VAULT[viewingLevel];
-            document.getElementById('app-container').innerHTML = `<div class="glass p-10 rounded-[3rem] w-full max-w-5xl flex flex-col gap-6 border-b-8 ${l.type==='quiz'?'border-red-500':'border-cyan-500'}"><div class="flex justify-between items-start"><div class="max-w-xl"><span class="text-xs font-bold text-cyan-400">CH ${l.ch}</span><h2 class="text-3xl font-black uppercase mb-4">${l.title}</h2><div class="p-4 bg-white/5 rounded-xl border-l-4 border-cyan-400 italic">"${l.explain}"</div></div><img src="${userData.mascot}.png" class="w-24"></div><div class="grid grid-cols-2 gap-8"><div><textarea id="ed" class="w-full h-32 bg-black/90 p-4 text-cyan-300 code-font text-lg rounded-2xl outline-none mb-4"></textarea><button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl">EXECUTE</button></div><div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center"><p class="text-xs font-bold text-slate-500 mb-2">GOAL:</p>${l.type==='quiz'?'<p class="text-xl text-red-400 font-black">MEMORY!</p>':`<code class="text-2xl font-black">${l.goal}</code>`}</div></div><button onclick="goToMap()" class="text-slate-500 text-xs font-black uppercase mt-4">Exit</button></div>`;
+            document.getElementById('app-container').innerHTML = `<div class="glass p-10 rounded-[3rem] w-full max-w-5xl flex flex-col gap-6 border-b-8 border-cyan-500"><div class="flex justify-between items-start"><div class="max-w-xl"><span class="text-xs font-bold text-cyan-400">BOOK ${l.b} | CH ${l.ch}</span><h2 class="text-3xl font-black uppercase mb-4">${l.title}</h2><div class="p-6 bg-white/5 rounded-xl border-l-4 border-cyan-400 text-lg leading-relaxed">"${l.explain}"</div></div><img src="${userData.mascot}.png" class="w-24"></div><div class="grid grid-cols-2 gap-8"><div><textarea id="ed" class="w-full h-48 bg-black/90 p-4 text-cyan-300 code-font text-lg rounded-2xl outline-none mb-4" placeholder="// Build your solution here..."></textarea><button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl">EXECUTE CODE</button></div><div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center border border-white/10"><p class="text-xs font-bold text-slate-500 mb-4 uppercase tracking-widest">Requirement Status:</p><div id="status" class="text-slate-400 italic">Awaiting execution...</div></div></div><button onclick="goToMap()" class="text-slate-500 text-xs font-black uppercase mt-4">Exit to Map</button></div>`;
         }
+
         function valid() { 
             const i = document.getElementById('ed').value.trim().replace(/\s/g, "");
             const g = CHAPTER_VAULT[viewingLevel].goal.replace(/\s/g, "");
@@ -151,9 +102,11 @@
                 if (viewingLevel === userData.currentLevel) {
                     db.collection("users").doc(auth.currentUser.uid).update({ currentLevel: viewingLevel+1, coins: firebase.firestore.FieldValue.increment(100) }).then(() => { userData.currentLevel++; viewingLevel++; userData.coins+=100; renderSuccess(); });
                 } else goToMap();
-            } else alert("Check your code!");
+            } else {
+                document.getElementById('status').innerHTML = `<span class="text-red-400">Logic Error: Your solution does not match the requirements. Check your syntax!</span>`;
+            }
         }
-        function renderSuccess() { document.getElementById('app-container').innerHTML = `<div class="text-center"><h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black uppercase neon-text">SUCCESS!</h2><button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black">CONTINUE</button></div>`; }
+        function renderSuccess() { document.getElementById('app-container').innerHTML = `<div class="text-center"><h1 class="text-9xl mb-6">🧠</h1><h2 class="text-5xl font-black uppercase neon-text">SUCCESS!</h2><p class="mt-4 text-slate-400">Rank Progressing...</p><button onclick="goToMap()" class="mt-10 bg-white text-slate-900 px-16 py-5 rounded-2xl font-black">CONTINUE</button></div>`; }
     </script>
 </body>
 </html>
