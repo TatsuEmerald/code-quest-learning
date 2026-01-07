@@ -3,221 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CodeQuest Mobile</title>
+    <title>CodeQuest 100</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 10px; }
+        body { background: #0f172a; color: white; font-family: sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 10px; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
         .code-font { font-family: 'Fira Code', monospace; }
-        
-        .map-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 900px; 
-            aspect-ratio: 16/9; 
-            background-size: cover; 
-            background-position: center; 
-            border-radius: 1.5rem; 
-            border: 2px solid rgba(255,255,255,0.1);
-            overflow: hidden;
-        }
-
-        @media (max-width: 640px) {
-            .map-container { aspect-ratio: 4/5; } 
-            .mascot-on-map { width: 80px !important; bottom: 40% !important; }
-            .quest-grid { grid-template-columns: 1fr !important; }
-        }
-
-        .mascot-on-map { width: 120px; position: absolute; bottom: 50%; left: 50%; transform: translateX(-50%); z-index: 5; }
-        .nav-btn { background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; color: white; border: 1px solid rgba(255,255,255,0.2); }
-        textarea { -webkit-appearance: none; border-radius: 0.75rem; resize: none; }
+        .map-container { position: relative; width: 100%; max-width: 900px; aspect-ratio: 16/9; background-size: cover; background-position: center; border-radius: 1.5rem; border: 2px solid rgba(255,255,255,0.1); overflow: hidden; background-color: #1e293b; }
+        @media (max-width: 640px) { .map-container { aspect-ratio: 4/5; } .mascot-on-map { width: 80px !important; bottom: 40% !important; } .quest-grid { grid-template-columns: 1fr !important; } }
+        .mascot-on-map { width: 120px; position: absolute; bottom: 50%; left: 50%; transform: translateX(-50%); z-index: 5; transition: all 0.3s; }
+        .nav-btn { background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; color: white; border: 1px solid rgba(255,255,255,0.2); transition: scale 0.2s; }
+        .nav-btn:active { scale: 0.9; }
+        textarea { -webkit-appearance: none; border-radius: 0.75rem; resize: none; spellcheck: false; }
     </style>
 </head>
 <body>
-
     <div id="app-container" class="w-full flex justify-center"></div>
 
     <script>
         const CHAPTER_VAULT = {
-            // --- CHAPTER 1: THE BASICS ---
             1: { b: 1, ch: 1, title: "The Message", goal: "Hello World", explain: "Text in code is called a 'String'. Type: Hello World" },
-            2: { b: 1, ch: 1, title: "The Quotes", goal: "\"Hello World\"", explain: "Strings need quotes to show they aren't commands. Type: \"Hello World\"" },
-            3: { b: 1, ch: 1, title: "The Shield", goal: "(\"Hello World\")", explain: "Parentheses ( ) act like a shield, holding data for a command. Type: (\"Hello World\")" },
-            4: { b: 1, ch: 1, title: "The Voice", goal: "console.log(\"Hello World\")", explain: "The 'Voice' of your code is console.log. Type: console.log(\"Hello World\")" },
-            5: { b: 1, ch: 1, title: "EXAM 1", goal: "console.log(\"Hello World\")", type: "quiz", explain: "EXAM: Make the computer speak the string Hello World. Requirement: Use the console.log command and quotes." },
-
-            // --- CHAPTER 2: VARIABLES ---
-            6: { b: 1, ch: 2, title: "Values", goal: "10", explain: "Numbers don't need quotes because they are math values. Type: 10" },
-            7: { b: 1, ch: 2, title: "Assignment", goal: "power = 10", explain: "The '=' sign is for storing a value in a name. Type: power = 10" },
-            8: { b: 1, ch: 2, title: "The Box", goal: "let power = 10", explain: "The word 'let' creates a new box for your data. Type: let power = 10" },
-            9: { b: 1, ch: 2, title: "Peeking", goal: "console.log(power)", explain: "To see inside a variable box, put its name in the voice command. Type: console.log(power)" },
-            10: { b: 1, ch: 2, title: "EXAM 2", goal: "let power = 10", type: "quiz", explain: "EXAM: Create a box called power and store the number 10. Requirement: Use 'let' and the assignment operator." },
-	
-	    // --- CHAPTER 3: MATH ---
+            2: { b: 1, ch: 1, title: "The Quotes", goal: "\"Hello World\"", explain: "Strings need quotes. Type: \"Hello World\"" },
+            3: { b: 1, ch: 1, title: "The Shield", goal: "(\"Hello World\")", explain: "Parentheses ( ) hold data. Type: (\"Hello World\")" },
+            4: { b: 1, ch: 1, title: "The Voice", goal: "console.log(\"Hello World\")", explain: "The Voice command is console.log. Type: console.log(\"Hello World\")" },
+            5: { b: 1, ch: 1, title: "EXAM 1", goal: "console.log(\"Hello World\")", type: "quiz", explain: "EXAM: Make the computer speak Hello World. Requirements: Use console.log and quotes." },
+            6: { b: 1, ch: 2, title: "Values", goal: "10", explain: "Numbers need no quotes. Type: 10" },
+            7: { b: 1, ch: 2, title: "Assignment", goal: "power = 10", explain: "'=' stores a value in a name. Type: power = 10" },
+            8: { b: 1, ch: 2, title: "The Box", goal: "let power = 10", explain: "'let' creates a new variable box. Type: let power = 10" },
+            9: { b: 1, ch: 2, title: "Peeking", goal: "console.log(power)", explain: "Look inside a variable. Type: console.log(power)" },
+            10: { b: 1, ch: 2, title: "EXAM 2", goal: "let power = 10", type: "quiz", explain: "EXAM: Create a box called power and store 10. Requirements: Use 'let' and '='." },
             11: { b: 1, ch: 3, title: "Math +", goal: "power + 5", explain: "The '+' symbol adds values. Type: power + 5" },
             12: { b: 1, ch: 3, title: "Math -", goal: "power - 2", explain: "The '-' symbol subtracts. Type: power - 2" },
             13: { b: 1, ch: 3, title: "Math *", goal: "power * 2", explain: "The '*' symbol multiplies. Type: power * 2" },
-            14: { b: 1, ch: 3, title: "Update", goal: "power = 20", explain: "Change a variable box value. Type: power = 20" },
+            14: { b: 1, ch: 3, title: "Update", goal: "power = 20", explain: "Change a variable value. Type: power = 20" },
             15: { b: 1, ch: 3, title: "New Math", goal: "let total = 5 + 5", explain: "Store math in a new variable. Type: let total = 5 + 5" },
             16: { b: 1, ch: 3, title: "Health", goal: "let health = 10 - 2", explain: "Calculate health. Type: let health = 10 - 2" },
             17: { b: 1, ch: 3, title: "Damage", goal: "let damage = 5 * 2", explain: "Calculate damage. Type: let damage = 5 * 2" },
             18: { b: 1, ch: 3, title: "Mix", goal: "total = power + 5", explain: "Add a variable and a number. Type: total = power + 5" },
-            19: { b: 1, ch: 3, title: "Alchemist", goal: "final = power + total", explain: "Add two variables together. Type: final = power + total" },
-            20: { b: 1, ch: 3, title: "EXAM 3", goal: "let final = power + 5", type: "quiz", explain: "EXAM: Store the result of power plus 5 into a new variable called 'final'. Requirements: Use 'let' and '+'." },
-
-            // --- CHAPTER 4: GATES ---
-            21: { b: 1, ch: 4, title: "Evaluation", goal: "power > 5", explain: "The '>' symbol checks if left is greater than right. Type: power > 5" },
-            22: { b: 1, ch: 4, title: "The Gate", goal: "if (power > 5)", explain: "An 'if' gate opens only if true. Type: if (power > 5)" },
-            23: { b: 1, ch: 4, title: "The Truth", goal: "10 > 5", explain: "Write a comparison that is 'true'. Type: 10 > 5" },
-            24: { b: 1, ch: 4, title: "The Lie", goal: "1 > 10", explain: "Write a comparison that is 'false'. Type: 1 > 10" },
-            25: { b: 1, ch: 4, title: "Less Than", goal: "health < 5", explain: "The '<' symbol checks if left is less than right. Type: health < 5" },
-            26: { b: 1, ch: 4, title: "Equality", goal: "power === 10", explain: "Check if exactly equal using '==='. Type: power === 10" },
+            19: { b: 1, ch: 3, title: "Alchemist", goal: "final = power + total", explain: "Add two variables. Type: final = power + total" },
+            20: { b: 1, ch: 3, title: "EXAM 3", goal: "let final = power + 5", type: "quiz", explain: "EXAM: Store power + 5 into 'final'. Requirements: Use 'let' and '+'." },
+            21: { b: 1, ch: 4, title: "Evaluation", goal: "power > 5", explain: "'>' checks if left is greater. Type: power > 5" },
+            22: { b: 1, ch: 4, title: "The Gate", goal: "if (power > 5)", explain: "'if' gates open if true. Type: if (power > 5)" },
+            23: { b: 1, ch: 4, title: "The Truth", goal: "10 > 5", explain: "Write a 'true' comparison. Type: 10 > 5" },
+            24: { b: 1, ch: 4, title: "The Lie", goal: "1 > 10", explain: "Write a 'false' comparison. Type: 1 > 10" },
+            25: { b: 1, ch: 4, title: "Less Than", goal: "health < 5", explain: "'<' checks if left is less. Type: health < 5" },
+            26: { b: 1, ch: 4, title: "Equality", goal: "power === 10", explain: "Check if exactly equal with '==='. Type: power === 10" },
             27: { b: 1, ch: 4, title: "Else", goal: "else", explain: "The 'wrong path' keyword. Type: else" },
-            28: { b: 1, ch: 4, title: "Block {", goal: "{", explain: "Starts the action list for a gate. Type: {" },
-            29: { b: 1, ch: 4, title: "Block }", goal: "}", explain: "Ends the action list for a gate. Type: }" },
-            30: { b: 1, ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "EXAM: Start a logic gate to check if power is greater than 5. Requirements: Use 'if', parentheses, and '>'." },
-
-            // --- CHAPTER 5: LOOPS ---
-            31: { b: 1, ch: 5, title: "The Repeat", goal: "for", explain: "The 'for' keyword starts a loop. Type: for" },
-            32: { b: 1, ch: 5, title: "The Counter", goal: "let i = 0", explain: "Create a counter 'i' set to 0. Type: let i = 0" },
+            28: { b: 1, ch: 4, title: "Block {", goal: "{", explain: "Starts the action list. Type: {" },
+            29: { b: 1, ch: 4, title: "Block }", goal: "}", explain: "Ends the action list. Type: }" },
+            30: { b: 1, ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "EXAM: Gate to check if power is > 5. Requirements: Use 'if', ( ), and '>'." },
+            31: { b: 1, ch: 5, title: "The Repeat", goal: "for", explain: "'for' starts a loop. Type: for" },
+            32: { b: 1, ch: 5, title: "The Counter", goal: "let i = 0", explain: "Create counter 'i' at 0. Type: let i = 0" },
             33: { b: 1, ch: 5, title: "The Limit", goal: "i < 10", explain: "Set the loop stop sign. Type: i < 10" },
             34: { b: 1, ch: 5, title: "The Step", goal: "i++", explain: "Add 1 to 'i' every lap. Type: i++" },
             35: { b: 1, ch: 5, title: "The Header", goal: "for (let i = 0; i < 5; i++)", explain: "Header order: (Start; Check; Step). Type: for (let i = 0; i < 5; i++)" },
-            36: { b: 1, ch: 5, title: "The Loop Box", goal: "{", explain: "Type '{' to open the repeating action box." },
-            37: { b: 1, ch: 5, title: "Action", goal: "console.log(i)", explain: "Type console.log(i) to print the counter inside the loop." },
-            38: { b: 1, ch: 5, title: "Closure", goal: "}", explain: "Type '}' to close the repeating action box." },
-            39: { b: 1, ch: 5, title: "Full Cycle", goal: "for", explain: "A loop is a header + { box }. Type 'for' to confirm." },
-            40: { b: 1, ch: 5, title: "CHAPTER 5 EXAM", goal: "for (let i = 0; i < 10; i++)", type: "quiz", explain: "EXAM: Write a loop header for 10 laps. Requirements: Start at 0, check 'i < 10', and count by 1s." },
-
-            // --- CHAPTER 6: ARRAYS (LISTS) ---
-            41: { b: 1, ch: 6, title: "The List", goal: "[ ]", explain: "Arrays are lists. Use square brackets to start. Type: [ ]" },
+            36: { b: 1, ch: 5, title: "The Loop Box", goal: "{", explain: "Open the repeating box. Type: {" },
+            37: { b: 1, ch: 5, title: "Action", goal: "console.log(i)", explain: "Log the counter inside. Type: console.log(i)" },
+            38: { b: 1, ch: 5, title: "Closure", goal: "}", explain: "Close the repeating box. Type: }" },
+            39: { b: 1, ch: 5, title: "Full Cycle", goal: "for", explain: "A loop is header + { box }. Type: for" },
+            40: { b: 1, ch: 5, title: "CHAPTER 5 EXAM", goal: "for (let i = 0; i < 10; i++)", type: "quiz", explain: "EXAM: Loop header for 10 laps. Requirements: Start at 0, check i < 10, use i++." },
+            41: { b: 1, ch: 6, title: "The List", goal: "[ ]", explain: "Arrays are lists. Use square brackets. Type: [ ]" },
             42: { b: 1, ch: 6, title: "Inventory", goal: "['Sword', 'Shield']", explain: "Quote items in a list. Type: ['Sword', 'Shield']" },
-            43: { b: 1, ch: 6, title: "Storage", goal: "let bag = ['Gem']", explain: "Store a list in a variable. Type: let bag = ['Gem']" },
+            43: { b: 1, ch: 6, title: "Storage", goal: "let bag = ['Gem']", explain: "Store list in variable. Type: let bag = ['Gem']" },
             44: { b: 1, ch: 6, title: "Index 0", goal: "0", explain: "Computers start counting at 0. Type: 0" },
-            45: { b: 1, ch: 6, title: "Access", goal: "bag[0]", explain: "Get the first item in 'bag'. Type: bag[0]" },
-            46: { b: 1, ch: 6, title: "Counting", goal: "bag.length", explain: "Check list size with .length. Type: bag.length" },
+            45: { b: 1, ch: 6, title: "Access", goal: "bag[0]", explain: "Get first item. Type: bag[0]" },
+            46: { b: 1, ch: 6, title: "Counting", goal: "bag.length", explain: "Check size with .length. Type: bag.length" },
             47: { b: 1, ch: 6, title: "Add", goal: "bag.push('Gold')", explain: "Add item to end. Type: bag.push('Gold')" },
             48: { b: 1, ch: 6, title: "Remove", goal: "bag.pop()", explain: "Remove last item. Type: bag.pop()" },
-            49: { b: 1, ch: 6, title: "Update", goal: "bag[0] = 'Axe'", explain: "Change the first item to 'Axe'. Type: bag[0] = 'Axe'" },
-            50: { b: 1, ch: 6, title: "CHAPTER 6 EXAM", goal: "bag[1]", type: "quiz", explain: "EXAM: Access the SECOND item in the 'bag' list. Requirements: Use brackets [ ] and the correct index." },
-
-            // --- CHAPTER 7: FUNCTIONS ---
-            51: { b: 1, ch: 7, title: "The Spell", goal: "function", explain: "Functions save code for later. Type: function" },
-            52: { b: 1, ch: 7, title: "Naming", goal: "function cast()", explain: "Name it 'cast' with empty (). Type: function cast()" },
-            53: { b: 1, ch: 7, title: "Function Box", goal: "{", explain: "Open the function action list. Type: {" },
-            54: { b: 1, ch: 7, title: "Log Action", goal: "console.log('Zap')", explain: "Log 'Zap' inside the function. Type: console.log('Zap')" },
-            55: { b: 1, ch: 7, title: "Close Function", goal: "}", explain: "Close the function box. Type: }" },
-            56: { b: 1, ch: 7, title: "The Call", goal: "cast()", explain: "To run it, type the name and (). Type: cast()" },
-            57: { b: 1, ch: 7, title: "Repeat Call", goal: "cast()", explain: "Functions can be run many times. Type: cast()" },
-            58: { b: 1, ch: 7, title: "Definition", goal: "function", explain: "Type 'function' to remember the keyword." },
-            59: { b: 1, ch: 7, title: "Structure", goal: "function", explain: "Functions keep code clean. Type: function" },
-            60: { b: 1, ch: 7, title: "CHAPTER 7 EXAM", goal: "go()", type: "quiz", explain: "EXAM: Call a function named 'go'. Requirements: Use the name and the call parentheses." },
-
-            // --- CHAPTER 8: INPUTS (PARAMETERS) ---
+            49: { b: 1, ch: 6, title: "Update", goal: "bag[0] = 'Axe'", explain: "Change item 0 to 'Axe'. Type: bag[0] = 'Axe'" },
+            50: { b: 1, ch: 6, title: "CHAPTER 6 EXAM", goal: "bag[1]", type: "quiz", explain: "EXAM: Access SECOND item in 'bag'. Requirements: Use [ ] and index 1." },
+            51: { b: 1, ch: 7, title: "The Spell", goal: "function", explain: "Functions save code. Type: function" },
+            52: { b: 1, ch: 7, title: "Naming", goal: "function cast()", explain: "Name it 'cast' with (). Type: function cast()" },
+            53: { b: 1, ch: 7, title: "Function Box", goal: "{", explain: "Open function box. Type: {" },
+            54: { b: 1, ch: 7, title: "Log Action", goal: "console.log('Zap')", explain: "Log 'Zap' inside. Type: console.log('Zap')" },
+            55: { b: 1, ch: 7, title: "Close Function", goal: "}", explain: "Close function box. Type: }" },
+            56: { b: 1, ch: 7, title: "The Call", goal: "cast()", explain: "Run it by name and (). Type: cast()" },
+            57: { b: 1, ch: 7, title: "Repeat Call", goal: "cast()", explain: "Run it again. Type: cast()" },
+            58: { b: 1, ch: 7, title: "Definition", goal: "function", explain: "Functions group actions. Type: function" },
+            59: { b: 1, ch: 7, title: "Structure", goal: "function", explain: "Keep code clean. Type: function" },
+            60: { b: 1, ch: 7, title: "CHAPTER 7 EXAM", goal: "go()", type: "quiz", explain: "EXAM: Call a function named 'go'. Requirements: Use name and ( )." },
             61: { b: 1, ch: 8, title: "Input", goal: "(n)", explain: "Parameters catch data. Type: (n)" },
             62: { b: 1, ch: 8, title: "Multi-Input", goal: "(a, b)", explain: "Separate inputs with commas. Type: (a, b)" },
-            63: { b: 1, ch: 8, title: "Using Input", goal: "console.log(a)", explain: "Use 'a' inside the function. Type: console.log(a)" },
-            64: { b: 1, ch: 8, title: "Greeting", goal: "function hi(n)", explain: "Function 'hi' with input 'n'. Type: function hi(n)" },
-            65: { b: 1, ch: 8, title: "Passing", goal: "hi('Hero')", explain: "Pass 'Hero' into the function. Type: hi('Hero')" },
-            66: { b: 1, ch: 8, title: "Flexible", goal: "hi('User')", explain: "Pass 'User' into the function. Type: hi('User')" },
+            63: { b: 1, ch: 8, title: "Using Input", goal: "console.log(a)", explain: "Use 'a' inside. Type: console.log(a)" },
+            64: { b: 1, ch: 8, title: "Greeting", goal: "function hi(n)", explain: "Function 'hi' with 'n'. Type: function hi(n)" },
+            65: { b: 1, ch: 8, title: "Passing", goal: "hi('Hero')", explain: "Send 'Hero' in. Type: hi('Hero')" },
+            66: { b: 1, ch: 8, title: "Flexible", goal: "hi('User')", explain: "Send 'User' in. Type: hi('User')" },
             67: { b: 1, ch: 8, title: "Math In", goal: "function add(a, b)", explain: "Function 'add' with two inputs. Type: function add(a, b)" },
-            68: { b: 1, ch: 8, title: "Numbers In", goal: "add(5, 5)", explain: "Send 5 and 5 into the function. Type: add(5, 5)" },
-            69: { b: 1, ch: 8, title: "Input Name", goal: "n", explain: "The input name acts like a variable. Type: n" },
-            70: { b: 1, ch: 8, title: "CHAPTER 8 EXAM", goal: "function hit(p)", type: "quiz", explain: "EXAM: Create a function 'hit' with one parameter 'p'. Requirements: Use 'function' and (p)." },
-
-            // --- CHAPTER 9: OUTPUTS (RETURN) ---
+            68: { b: 1, ch: 8, title: "Numbers In", goal: "add(5, 5)", explain: "Send 5 and 5. Type: add(5, 5)" },
+            69: { b: 1, ch: 8, title: "Input Name", goal: "n", explain: "Inputs act like variables. Type: n" },
+            70: { b: 1, ch: 8, title: "CHAPTER 8 EXAM", goal: "function hit(p)", type: "quiz", explain: "EXAM: Function 'hit' with input 'p'. Requirements: Use 'function' and (p)." },
             71: { b: 1, ch: 9, title: "Return", goal: "return", explain: "Send a value back out. Type: return" },
-            72: { b: 1, ch: 9, title: "Hand-off", goal: "return x", explain: "Send 'x' back out. Type: return x" },
-            73: { b: 1, ch: 9, title: "Catching", goal: "let r = go()", explain: "Store the returned value. Type: let r = go()" },
-            74: { b: 1, ch: 9, title: "Sum Return", goal: "return a + b", explain: "Return a math result. Type: return a + b" },
-            75: { b: 1, ch: 9, title: "Exit", goal: "return", explain: "Return stops the function instantly. Type: return" },
+            72: { b: 1, ch: 9, title: "Hand-off", goal: "return x", explain: "Send 'x' out. Type: return x" },
+            73: { b: 1, ch: 9, title: "Catching", goal: "let r = go()", explain: "Store returned value. Type: let r = go()" },
+            74: { b: 1, ch: 9, title: "Sum Return", goal: "return a + b", explain: "Return math result. Type: return a + b" },
+            75: { b: 1, ch: 9, title: "Exit", goal: "return", explain: "Return stops function instantly. Type: return" },
             76: { b: 1, ch: 9, title: "Bool Return", goal: "return true", explain: "Return the truth. Type: return true" },
-            77: { b: 1, ch: 9, title: "Logic Return", goal: "return", explain: "Type 'return' to remember it sends data back." },
-            78: { b: 1, ch: 9, title: "Result", goal: "return", explain: "Functions 'become' their return value. Type: return" },
-            79: { b: 1, ch: 9, title: "Stop Sign", goal: "return", explain: "Nothing runs after a return. Type: return" },
-            80: { b: 1, ch: 9, title: "CHAPTER 9 EXAM", goal: "return p", type: "quiz", explain: "EXAM: Make a function send back the value of 'p'. Requirements: Use the 'return' keyword." },
-
-            // --- CHAPTER 10: OBJECTS (DATA GROUPS) ---
+            77: { b: 1, ch: 9, title: "Logic Return", goal: "return", explain: "Return sends data back. Type: return" },
+            78: { b: 1, ch: 9, title: "Result", goal: "return", explain: "Return is the output. Type: return" },
+            79: { b: 1, ch: 9, title: "Stop Sign", goal: "return", explain: "Nothing runs after return. Type: return" },
+            80: { b: 1, ch: 9, title: "CHAPTER 9 EXAM", goal: "return p", type: "quiz", explain: "EXAM: Send back value of 'p'. Requirements: Use 'return'." },
             81: { b: 1, ch: 10, title: "Object", goal: "{ }", explain: "Objects group data with { }. Type: { }" },
             82: { b: 1, ch: 10, title: "Key:Value", goal: "hp: 100", explain: "Pair keys and values with colons. Type: hp: 100" },
             83: { b: 1, ch: 10, title: "Group", goal: "{ hp: 100 }", explain: "A full simple object. Type: { hp: 100 }" },
             84: { b: 1, ch: 10, title: "Storage", goal: "let h = { hp: 100 }", explain: "Store object in 'h'. Type: let h = { hp: 100 }" },
             85: { b: 1, ch: 10, title: "Dot Access", goal: "h.hp", explain: "Get data using a dot. Type: h.hp" },
-            86: { b: 1, ch: 10, title: "Update", goal: "h.hp = 90", explain: "Change object data with a dot. Type: h.hp = 90" },
+            86: { b: 1, ch: 10, title: "Update", goal: "h.hp = 90", explain: "Change data with a dot. Type: h.hp = 90" },
             87: { b: 1, ch: 10, title: "New Key", goal: "h.mp = 50", explain: "Add 'mp' using a dot. Type: h.mp = 50" },
-            88: { b: 1, ch: 10, title: "Nested", goal: "h.s.atk", explain: "Dot through layers of objects. Type: h.s.atk" },
+            88: { b: 1, ch: 10, title: "Nested", goal: "h.s.atk", explain: "Dot through layers. Type: h.s.atk" },
             89: { b: 1, ch: 10, title: "List in Obj", goal: "h.i = []", explain: "Set 'i' to a list. Type: h.i = []" },
-            90: { b: 1, ch: 10, title: "CHAPTER 10 EXAM", goal: "hero.hp", type: "quiz", explain: "EXAM: Access the 'hp' value inside the 'hero' object. Requirements: Use dot notation." },
-
-            // --- CHAPTER 11: REVIEW ---
-            91: { b: 1, ch: 11, title: "Full Review 1", goal: "let e = 10", explain: "Create energy 'e' at 10. Type: let e = 10" },
-            92: { b: 1, ch: 11, title: "Full Review 2", goal: "if (e > 0)", explain: "Check if 'e' is above 0. Type: if (e > 0)" },
-            93: { b: 1, ch: 11, title: "Full Review 3", goal: "{", explain: "Open the action box. Type: {" },
-            94: { b: 1, ch: 11, title: "Full Review 4", goal: "e = e - 1", explain: "Subtract 1 from 'e'. Type: e = e - 1" },
-            95: { b: 1, ch: 11, title: "Full Review 5", goal: "}", explain: "Close the box. Type: }" },
-            96: { b: 1, ch: 11, title: "Full Review 6", goal: "console.log(e)", explain: "Log the energy. Type: console.log(e)" },
-            97: { b: 1, ch: 11, title: "Full Review 7", goal: "for (let i=0; i<3; i++)", explain: "Loop header for 3 laps. Type: for (let i=0; i<3; i++)" },
-            98: { b: 1, ch: 11, title: "Full Review 8", goal: "return e", explain: "Return the energy value. Type: return e" },
-            99: { b: 1, ch: 11, title: "Full Review 9", goal: "let p = []", explain: "Empty list 'p'. Type: let p = []" },
-            100: { b: 1, ch: 11, title: "GRADUATION", goal: "console.log('Master')", type: "quiz", explain: "FINAL EXAM: Log the string 'Master' to finish Book 1! Requirements: Use console.log and quotes." }
+            90: { b: 1, ch: 10, title: "CHAPTER 10 EXAM", goal: "hero.hp", type: "quiz", explain: "EXAM: Get 'hp' inside 'hero'. Requirements: Use dot notation." },
+            91: { b: 1, ch: 11, title: "Review 1", goal: "let e = 10", explain: "Create energy 'e' at 10. Type: let e = 10" },
+            92: { b: 1, ch: 11, title: "Review 2", goal: "if (e > 0)", explain: "Check if 'e' > 0. Type: if (e > 0)" },
+            93: { b: 1, ch: 11, title: "Review 3", goal: "{", explain: "Open box. Type: {" },
+            94: { b: 1, ch: 11, title: "Review 4", goal: "e = e - 1", explain: "Subtract 1. Type: e = e - 1" },
+            95: { b: 1, ch: 11, title: "Review 5", goal: "}", explain: "Close box. Type: }" },
+            96: { b: 1, ch: 11, title: "Review 6", goal: "console.log(e)", explain: "Log energy. Type: console.log(e)" },
+            97: { b: 1, ch: 11, title: "Review 7", goal: "for (let i=0; i<3; i++)", explain: "Loop for 3 laps. Type: for (let i=0; i<3; i++)" },
+            98: { b: 1, ch: 11, title: "Review 8", goal: "return e", explain: "Return energy. Type: return e" },
+            99: { b: 1, ch: 11, title: "Review 9", goal: "let p = []", explain: "Empty list 'p'. Type: let p = []" },
+            100: { b: 1, ch: 11, title: "GRADUATION", goal: "console.log('Master')", type: "quiz", explain: "FINAL EXAM: Log 'Master' to finish! Requirements: Use console.log and quotes." }
         };
-	
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig", 
-            authDomain: "codequest-c1da5.firebaseapp.com", 
-            projectId: "codequest-c1da5", 
-            storageBucket: "codequest-c1da5.firebasestorage.app", 
-            messagingSenderId: "726116988970", 
-            appId: "1:726116988970:web:e8681978587c9d36a3eb53" 
-        };
+        const firebaseConfig = { apiKey: "AIzaSyAKbMQ9rNalDV6p0pJSpIy84EthjLeGwig", authDomain: "codequest-c1da5.firebaseapp.com", projectId: "codequest-c1da5", storageBucket: "codequest-c1da5.firebasestorage.app", messagingSenderId: "726116988970", appId: "1:726116988970:web:e8681978587c9d36a3eb53" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(); const db = firebase.firestore();
         let userData = { mascot: "", currentLevel: 1, coins: 0 }; let viewingLevel = 1;
 
         window.onload = () => { renderLogin(); };
-
-        function renderLogin() {
-            document.getElementById('app-container').innerHTML = `
-                <div class="glass p-6 sm:p-10 rounded-[2rem] text-center max-w-sm w-full">
-                    <h1 class="text-4xl sm:text-5xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1>
-                    <button onclick="login()" class="w-full bg-white text-slate-900 font-black py-4 rounded-xl shadow-lg">CONTINUE</button>
-                </div>`;
-        }
-
-        function login() {
-            const p = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(p).then(res => {
-                db.collection("users").doc(res.user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().setupComplete) {
-                        userData = doc.data(); viewingLevel = userData.currentLevel; goToMap();
-                    } else renderMascotChoice();
-                });
-            });
-        }
-
-        function renderMascotChoice() {
-            document.getElementById('app-container').innerHTML = `
-                <div class="text-center w-full max-w-2xl px-4">
-                    <h2 class="text-2xl font-black mb-6 uppercase">Select Partner</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div onclick="saveM('dragon')" class="glass p-4 rounded-2xl cursor-pointer">
-                            <img src="dragon.png" class="w-full max-w-[120px] mx-auto"><p class="mt-2 font-black text-cyan-400">CINDER</p>
-                        </div>
-                        <div onclick="saveM('unicorn')" class="glass p-4 rounded-2xl cursor-pointer">
-                            <img src="unicorn.png" class="w-full max-w-[120px] mx-auto"><p class="mt-2 font-black text-fuchsia-400">SPARKLE</p>
-                        </div>
-                    </div>
-                </div>`;
-        }
-
-        function saveM(m) {
-            userData.mascot = m; userData.currentLevel = 1; viewingLevel = 1;
-            db.collection("users").doc(auth.currentUser.uid).set({ mascot: m, currentLevel: 1, coins: 0, setupComplete: true }, { merge: true }).then(goToMap);
-        }
+        function renderLogin() { document.getElementById('app-container').innerHTML = `<div class="glass p-6 sm:p-10 rounded-[2rem] text-center max-w-sm w-full"><h1 class="text-4xl sm:text-5xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">CodeQuest</h1><button onclick="login()" class="w-full bg-white text-slate-900 font-black py-4 rounded-xl shadow-lg">CONTINUE</button></div>`; }
+        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).then(res => { db.collection("users").doc(res.user.uid).get().then(doc => { if (doc.exists && doc.data().setupComplete) { userData = doc.data(); viewingLevel = userData.currentLevel; goToMap(); } else renderMascotChoice(); }); }); }
+        function renderMascotChoice() { document.getElementById('app-container').innerHTML = `<div class="text-center w-full max-w-2xl px-4"><h2 class="text-2xl font-black mb-6 uppercase">Select Partner</h2><div class="grid grid-cols-2 gap-4"><div onclick="saveM('dragon')" class="glass p-4 rounded-2xl cursor-pointer"><img src="dragon.png" class="w-full max-w-[120px] mx-auto"><p class="mt-2 font-black text-cyan-400">CINDER</p></div><div onclick="saveM('unicorn')" class="glass p-4 rounded-2xl cursor-pointer"><img src="unicorn.png" class="w-full max-w-[120px] mx-auto"><p class="mt-2 font-black text-fuchsia-400">SPARKLE</p></div></div></div>`; }
+        function saveM(m) { userData.mascot = m; userData.currentLevel = 1; viewingLevel = 1; db.collection("users").doc(auth.currentUser.uid).set({ mascot: m, currentLevel: 1, coins: 0, setupComplete: true }, { merge: true }).then(goToMap); }
 
         function goToMap() {
             const l = CHAPTER_VAULT[viewingLevel] || { title: "SOON", ch: 1, b: 1 };
@@ -227,56 +146,13 @@
             const startLvl = Math.min(...chLevels);
             const pct = ((viewingLevel - startLvl + 1) / chLevels.length) * 100;
 
-            document.getElementById('app-container').innerHTML = `
-                <div class="map-container" style="background-image: url('map.png'); background-color: #1e293b;">
-                    <img src="${userData.mascot}.png" class="mascot-on-map">
-                    <div class="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none">
-                        <button onclick="viewDir(-1)" class="nav-btn w-10 h-10 ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button>
-                        <button onclick="viewDir(1)" class="nav-btn w-10 h-10 ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button>
-                    </div>
-                    <div class="absolute bottom-0 left-0 w-full p-4 bg-slate-900/95 flex items-center justify-between z-20 border-t border-white/10">
-                        <div class="flex items-center gap-3">
-                            <img src="${userData.mascot}.png" class="w-10 h-10 object-contain rounded-full bg-white/10">
-                            <div>
-                                <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest">${rankNames[curB]} | CH ${curC}</p>
-                                <p class="text-sm font-black">LVL ${viewingLevel} (${Math.round(pct)}%)</p>
-                            </div>
-                        </div>
-                        <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-6 py-2 rounded-lg font-black text-xs">START</button>
-                    </div>
-                    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 text-center z-30">
-                        <div class="w-16 h-16 bg-cyan-500 rounded-full border-4 border-white flex items-center justify-center font-black text-2xl shadow-xl">${viewingLevel}</div>
-                        <p class="mt-2 text-xs font-black uppercase tracking-widest bg-black/60 px-3 py-1 rounded-full">${l.title}</p>
-                    </div>
-                </div>`;
+            document.getElementById('app-container').innerHTML = `<div class="map-container" style="background-image: url('map.png')"><img src="${userData.mascot}.png" class="mascot-on-map"><div class="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-30 pointer-events-none"><button onclick="viewDir(-1)" class="nav-btn w-10 h-10 ${viewingLevel > 1 ? 'pointer-events-auto' : 'opacity-0'}">⬅️</button><button onclick="viewDir(1)" class="nav-btn w-10 h-10 ${viewingLevel < userData.currentLevel ? 'pointer-events-auto' : 'opacity-0'}">➡️</button></div><div class="absolute bottom-0 left-0 w-full p-4 bg-slate-900/95 flex items-center justify-between z-20 border-t border-white/10"><div class="flex items-center gap-3"><img src="${userData.mascot}.png" class="w-10 h-10 object-contain rounded-full bg-white/10"><div><p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest">${rankNames[curB]} | CH ${curC}</p><p class="text-sm font-black">LVL ${viewingLevel} (${Math.round(pct)}%)</p></div></div><button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-6 py-2 rounded-lg font-black text-xs">START</button></div><div class="absolute top-1/3 left-1/2 -translate-x-1/2 text-center z-30"><div class="w-16 h-16 bg-cyan-500 rounded-full border-4 border-white flex items-center justify-center font-black text-2xl shadow-xl">${viewingLevel}</div><p class="mt-2 text-xs font-black uppercase tracking-widest bg-black/60 px-3 py-1 rounded-full">${l.title}</p></div></div>`;
         }
 
         function viewDir(d) { viewingLevel += d; goToMap(); }
-
         function startQuest() {
             const l = CHAPTER_VAULT[viewingLevel];
-            document.getElementById('app-container').innerHTML = `
-                <div class="glass p-5 rounded-[1.5rem] w-full max-w-3xl flex flex-col gap-4 max-h-[95vh] overflow-y-auto">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-[10px] font-bold text-cyan-400 uppercase">Book ${l.b || 1} | Ch ${l.ch}</span>
-                            <h2 class="text-xl font-black uppercase">${l.title}</h2>
-                        </div>
-                        <img src="${userData.mascot}.png" class="w-10">
-                    </div>
-                    <div class="p-4 bg-white/5 rounded-xl border-l-4 border-cyan-400 text-sm italic">"${l.explain}"</div>
-                    <div class="grid quest-grid grid-cols-2 gap-4">
-                        <div class="flex flex-col gap-2">
-                            <textarea id="ed" class="w-full h-32 bg-black/80 p-4 text-cyan-300 code-font text-base outline-none border border-white/10 focus:border-cyan-400" placeholder="Type here..."></textarea>
-                            <button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-3 rounded-xl uppercase text-sm">Execute</button>
-                        </div>
-                        <div class="bg-white/5 rounded-xl p-4 text-center flex flex-col justify-center border border-white/10">
-                            <p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Requirement Status</p>
-                            <div id="status" class="text-xs text-slate-400">Awaiting your code...</div>
-                        </div>
-                    </div>
-                    <button onclick="goToMap()" class="text-slate-500 text-[10px] font-black uppercase">Exit Quest</button>
-                </div>`;
+            document.getElementById('app-container').innerHTML = `<div class="glass p-5 rounded-[1.5rem] w-full max-w-3xl flex flex-col gap-4 max-h-[95vh] overflow-y-auto"><div class="flex justify-between items-center"><div><span class="text-[10px] font-bold text-cyan-400 uppercase">Book ${l.b || 1} | Ch ${l.ch}</span><h2 class="text-xl font-black uppercase">${l.title}</h2></div><img src="${userData.mascot}.png" class="w-10"></div><div class="p-4 bg-white/5 rounded-xl border-l-4 border-cyan-400 text-sm italic">"${l.explain}"</div><div class="grid quest-grid grid-cols-2 gap-4"><div class="flex flex-col gap-2"><textarea id="ed" class="w-full h-32 bg-black/80 p-4 text-cyan-300 code-font text-base outline-none border border-white/10 focus:border-cyan-400" placeholder="Type here..."></textarea><button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-3 rounded-xl uppercase text-sm">Execute</button></div><div class="bg-white/5 rounded-xl p-4 text-center flex flex-col justify-center border border-white/10"><p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Requirement Status</p><div id="status" class="text-xs text-slate-400">Awaiting your code...</div></div></div><button onclick="goToMap()" class="text-slate-500 text-[10px] font-black uppercase">Exit Quest</button></div>`;
         }
 
         function valid() {
@@ -284,26 +160,12 @@
             const g = CHAPTER_VAULT[viewingLevel].goal.replace(/\s/g, "");
             if (i === g) {
                 if (viewingLevel === userData.currentLevel) {
-                    db.collection("users").doc(auth.currentUser.uid).update({ 
-                        currentLevel: viewingLevel+1, 
-                        coins: firebase.firestore.FieldValue.increment(100) 
-                    }).then(() => { 
-                        userData.currentLevel++; viewingLevel++; userData.coins+=100; renderSuccess(); 
-                    });
+                    db.collection("users").doc(auth.currentUser.uid).update({ currentLevel: viewingLevel+1, coins: firebase.firestore.FieldValue.increment(100) }).then(() => { userData.currentLevel++; viewingLevel++; userData.coins+=100; renderSuccess(); });
                 } else goToMap();
-            } else {
-                document.getElementById('status').innerHTML = `<span class="text-red-400 font-bold">Error! Check requirements.</span>`;
-            }
+            } else { document.getElementById('status').innerHTML = `<span class="text-red-400 font-bold">Error! Check requirements.</span>`; }
         }
 
-        function renderSuccess() {
-            document.getElementById('app-container').innerHTML = `
-                <div class="text-center p-10 glass rounded-3xl w-full max-w-sm">
-                    <h1 class="text-7xl mb-4">🧠</h1>
-                    <h2 class="text-3xl font-black uppercase text-cyan-400">SUCCESS!</h2>
-                    <button onclick="goToMap()" class="mt-8 bg-white text-slate-900 px-10 py-3 rounded-xl font-black w-full">CONTINUE</button>
-                </div>`;
-        }
+        function renderSuccess() { document.getElementById('app-container').innerHTML = `<div class="text-center p-10 glass rounded-3xl w-full max-w-sm"><h1 class="text-7xl mb-4">🧠</h1><h2 class="text-3xl font-black uppercase text-cyan-400">SUCCESS!</h2><button onclick="goToMap()" class="mt-8 bg-white text-slate-900 px-10 py-3 rounded-xl font-black w-full">CONTINUE</button></div>`; }
     </script>
 </body>
 </html>
