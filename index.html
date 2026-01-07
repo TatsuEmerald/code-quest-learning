@@ -59,6 +59,89 @@
             28: { b: 1, ch: 4, title: "Block {", goal: "{", explain: "Starts action list." },
             29: { b: 1, ch: 4, title: "Block }", goal: "}", explain: "Ends action list." },
             30: { b: 1, ch: 4, title: "CHAPTER 4 EXAM", goal: "if (power > 5)", type: "quiz", explain: "EXAM: Start a logic gate to check if power is greater than 5. Requirements: Use the 'if' keyword, parentheses (), and the '>' symbol." },
+	    // --- CHAPTER 5: THE LOOP SPIRAL ---
+            31: { b: 1, ch: 5, title: "The Repeat", goal: "for", explain: "To repeat code, we use the 'for' keyword. Type it to begin the loop training." },
+            32: { b: 1, ch: 5, title: "The Counter", goal: "let i = 0", explain: "Loops need a counter. Create one named 'i' and set it to 0 using 'let'." },
+            33: { b: 1, ch: 5, title: "The Limit", goal: "i < 10", explain: "A loop needs a stop sign. Write a comparison to check if 'i' is less than 10." },
+            34: { b: 1, ch: 5, title: "The Step", goal: "i++", explain: "To count up, use 'i++'. This adds 1 to your counter every lap." },
+            35: { b: 1, ch: 5, title: "The Header", goal: "for (let i = 0; i < 5; i++)", explain: "Combine them! Write a loop header: start at 0, stop before 5, count by 1s." },
+            36: { b: 1, ch: 5, title: "Loop Body", goal: "{", explain: "Like 'if' gates, loops use an opening curly bracket '{' to start the action list." },
+            37: { b: 1, ch: 5, title: "Loop Action", goal: "console.log(i)", explain: "Inside the loop, use your 'Voice' command to print the counter variable 'i'." },
+            38: { b: 1, ch: 5, title: "Loop Closure", goal: "}", explain: "Use the closing curly bracket '}' to tell the computer the loop ends here." },
+            39: { b: 1, ch: 5, title: "Safety Step", goal: "i++", explain: "If you don't increase 'i', the loop runs forever! Type the increment command again." },
+            40: { b: 1, ch: 5, title: "CHAPTER 5 EXAM", goal: "for (let i = 0; i < 10; i++)", type: "quiz", explain: "EXAM: Write a loop header that repeats 10 times. Requirements: Use 'for', start 'i' at 0, check if 'i' is less than 10, and use 'i++'." },
+
+            // --- CHAPTER 6: THE LOGIC ARRAY ---
+            41: { b: 1, ch: 6, title: "The List", goal: "[ ]", explain: "An Array is a list. Use square brackets [ ] to create an empty list." },
+            42: { b: 1, ch: 6, title: "Inventory", goal: "['Sword', 'Shield']", explain: "Lists hold items. Create a list with the strings 'Sword' and 'Shield' inside." },
+            43: { b: 1, ch: 6, title: "Storing Lists", goal: "let items = ['A', 'B']", explain: "Create a variable named 'items' and store a list of ['A', 'B'] inside it." },
+            44: { b: 1, ch: 6, title: "The Index", goal: "0", explain: "Computers count from 0. Type the number used to find the VERY FIRST item in a list." },
+            45: { b: 1, ch: 6, title: "Grabbing", goal: "items[0]", explain: "To get an item, use the list name 'items' followed by index 0 in brackets [ ]." },
+            46: { b: 1, ch: 6, title: "Length", goal: "items.length", explain: "To count a list, use the list name followed by '.length'." },
+            47: { b: 1, ch: 6, title: "Push", goal: "items.push('Gold')", explain: "Add to a list! Use '.push' with the string 'Gold' in parentheses ( )." },
+            48: { b: 1, ch: 6, title: "Pop", goal: "items.pop()", explain: "Remove the last item! Use the '.pop' command with empty parentheses ( )." },
+            49: { b: 1, ch: 6, title: "Update List", goal: "items[0] = 'Axe'", explain: "Change item 0 to the string 'Axe' using the assignment operator '='." },
+            50: { b: 1, ch: 6, title: "CHAPTER 6 EXAM", goal: "items[1]", type: "quiz", explain: "EXAM: Access the SECOND item in the list named 'items'. Requirement: Use brackets and the correct index number." },
+
+            // --- CHAPTER 7: THE FUNCTION FORGE ---
+            51: { b: 1, ch: 7, title: "The Spell", goal: "function", explain: "Functions are saved spells. Type 'function' to start defining one." },
+            52: { b: 1, ch: 7, title: "Name", goal: "function go()", explain: "Name your function 'go' followed by empty parentheses ( )." },
+            53: { b: 1, ch: 7, title: "Gate {", goal: "{", explain: "Functions use '{' to hold their actions. Type the opener." },
+            54: { b: 1, ch: 7, title: "Action", goal: "console.log('X')", explain: "Inside the function, log the string 'X' to the console." },
+            55: { b: 1, ch: 7, title: "Gate }", goal: "}", explain: "Close your function definition with the '}' bracket." },
+            56: { b: 1, ch: 7, title: "The Call", goal: "go()", explain: "To use the spell, type the name 'go' followed by ( ). This is called 'calling' it." },
+            57: { b: 1, ch: 7, title: "Reuse", goal: "go()", explain: "Call the 'go' function one more time to see it run again." },
+            58: { b: 1, ch: 7, title: "Clean Code", goal: "function", explain: "Functions group actions. Type 'function' to remember its purpose." },
+            59: { b: 1, ch: 7, title: "Top Down", goal: "function", explain: "Usually, we define functions at the top of our code. Type 'function' again." },
+            60: { b: 1, ch: 7, title: "CHAPTER 7 EXAM", goal: "start()", type: "quiz", explain: "EXAM: Run a function named 'start'. Requirement: Use the name and the correct calling symbols." },
+
+            // --- CHAPTER 8: THE PARAMETER BRIDGE ---
+            61: { b: 1, ch: 8, title: "The Input", goal: "(name)", explain: "Parameters take data in. Type '(name)' as a placeholder." },
+            62: { b: 1, ch: 8, title: "Multiple", goal: "(a, b)", explain: "Send two inputs by separating 'a' and 'b' with a comma inside ( )." },
+            63: { b: 1, ch: 8, title: "Usage", goal: "console.log(a)", explain: "Inside a function, use the parameter 'a' by logging it (no quotes!)." },
+            64: { b: 1, ch: 8, title: "Greet", goal: "function greet(n)", explain: "Define a function 'greet' that takes one parameter called 'n'." },
+            65: { b: 1, ch: 8, title: "Send Data", goal: "greet('Hero')", explain: "Call 'greet' and pass the string 'Hero' inside the parentheses." },
+            66: { b: 1, ch: 8, title: "Teleport", goal: "greet", explain: "The data moves from the call to the parameter. Type the name 'greet'." },
+            67: { b: 1, ch: 8, title: "Flex", goal: "greet('User')", explain: "Call 'greet' again, but this time pass the string 'User'." },
+            68: { b: 1, ch: 8, title: "Math In", goal: "function add(a, b)", explain: "Define function 'add' that takes two parameters: 'a' and 'b'." },
+            69: { b: 1, ch: 8, title: "Math Call", goal: "add(5, 5)", explain: "Call 'add' and pass the numbers 5 and 5 inside." },
+            70: { b: 1, ch: 8, title: "CHAPTER 8 EXAM", goal: "function cast(p)", type: "quiz", explain: "EXAM: Define a function named 'cast' that accepts one parameter named 'p'. Requirement: Use the function keyword and parentheses." },
+
+            // --- CHAPTER 9: THE RETURN PORTAL ---
+            71: { b: 1, ch: 9, title: "The Result", goal: "return", explain: "The 'return' keyword sends a value out of a function. Type it now." },
+            72: { b: 1, ch: 9, title: "Hand-off", goal: "return x", explain: "Write a command to return the variable 'x'." },
+            73: { b: 1, ch: 9, title: "The Exit", goal: "return", explain: "'return' also stops the function immediately. Type it again." },
+            74: { b: 1, ch: 9, title: "Catching", goal: "let r = add(1, 1)", explain: "Store the result of add(1, 1) into a new variable called 'r'." },
+            75: { b: 1, ch: 9, title: "Direct", goal: "return a + b", explain: "Inside a function, return the math result of 'a + b' directly." },
+            76: { b: 1, ch: 9, title: "Truth Ret", goal: "return true", explain: "Write a command to return the boolean value 'true'." },
+            77: { b: 1, ch: 9, title: "Check Ret", goal: "return", explain: "Return is the heart of logic. Type it one more time." },
+            78: { b: 1, ch: 9, title: "Empty", goal: "undefined", explain: "If you don't return anything, the result is 'undefined'. Type it." },
+            79: { b: 1, ch: 9, title: "If Return", goal: "if", explain: "You can use an 'if' gate to decide WHAT to return. Type 'if'." },
+            80: { b: 1, ch: 9, title: "CHAPTER 9 EXAM", goal: "return p", type: "quiz", explain: "EXAM: Inside a function, send back the value of parameter 'p'. Requirement: Use the 'return' keyword." },
+
+            // --- CHAPTER 10: MASTER REVIEW ---
+            81: { b: 1, ch: 10, title: "Review 1", goal: "let e = 100", explain: "Create a variable 'e' and set it to 100." },
+            82: { b: 1, ch: 10, title: "Review 2", goal: "e = e - 10", explain: "Subtract 10 from variable 'e' and save it back to 'e'." },
+            83: { b: 1, ch: 10, title: "Review 3", goal: "let p = []", explain: "Create a variable 'p' and set it to an empty list [ ]." },
+            84: { b: 1, ch: 10, title: "Review 4", goal: "p.push('G')", explain: "Add the string 'G' to the list 'p' using '.push'." },
+            85: { b: 1, ch: 10, title: "Review 5", goal: "for (let i=0; i<3; i++)", explain: "Write a loop header that counts from 0 to 3." },
+            86: { b: 1, ch: 10, title: "Review 6", goal: "if (e > 0)", explain: "Write an 'if' gate to check if 'e' is greater than 0." },
+            87: { b: 1, ch: 10, title: "Review 7", goal: "function play()", explain: "Define a function named 'play' with no parameters." },
+            88: { b: 1, ch: 10, title: "Review 8", goal: "function h(a)", explain: "Define a function 'h' that takes one parameter 'a'." },
+            89: { b: 1, ch: 10, title: "Review 9", goal: "return h", explain: "Return the variable 'h' from a function." },
+            90: { b: 1, ch: 10, title: "FINAL EXAM", goal: "console.log('Master')", type: "quiz", explain: "EXAM: Output the string 'Master' to the console. Requirement: Use your 'Voice' command." },
+
+            // --- CHAPTER 11: DATA OBJECTS ---
+            91: { b: 1, ch: 11, title: "Object", goal: "{ }", explain: "Objects group data. Use curly brackets { } to create an empty one." },
+            92: { b: 1, ch: 11, title: "Key-Value", goal: "name: 'C'", explain: "Inside an object, pair the key 'name' with the value 'C' using a colon." },
+            93: { b: 1, ch: 11, title: "Grouping", goal: "{ n: 'C', l: 1 }", explain: "Create an object with n: 'C' and l: 1 separated by a comma." },
+            94: { b: 1, ch: 11, title: "Storage", goal: "let h = { hp: 100 }", explain: "Store an object { hp: 100 } into a variable named 'h'." },
+            95: { b: 1, ch: 11, title: "Dot Access", goal: "h.hp", explain: "Access the 'hp' inside 'h' using 'h' followed by a dot '.' and 'hp'." },
+            96: { b: 1, ch: 11, title: "Update Obj", goal: "h.hp = 90", explain: "Use dot notation and '=' to change h.hp to 90." },
+            97: { b: 1, ch: 11, title: "Add Key", goal: "h.mp = 50", explain: "Add a new key 'mp' to object 'h' and set it to 50." },
+            98: { b: 1, ch: 11, title: "Nested", goal: "h.s.atk", explain: "Access 'atk' inside 's' which is inside 'h' using dots." },
+            99: { b: 1, ch: 11, title: "List Link", goal: "h.i = []", explain: "Set the key 'i' in object 'h' to an empty list [ ]." },
+            100: { b: 1, ch: 11, title: "CHAPTER 11 EXAM", goal: "hero.hp", type: "quiz", explain: "EXAM: Access the value of 'hp' inside the 'hero' object. Requirement: Use dot notation." },
 
             // BOOK 2: JOURNEYMAN
             101: { b: 2, ch: 1, title: "Output Protocol", goal: "console.log('Online')", explain: "TASK: Use 'Voice' to output Online." }
@@ -216,4 +299,3 @@
     </script>
 </body>
 </html>
-
