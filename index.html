@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeQuest: Layer Fix</title>
+    <title>CodeQuest: HUD Restored</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -14,18 +14,7 @@
         .neon-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8); }
         .code-font { font-family: 'Fira Code', monospace; }
         textarea { resize: none; spellcheck: false; }
-        
-        /* Mascot Layer - Stays behind */
-        .mascot-on-map { 
-            width: 130px; 
-            position: absolute; 
-            bottom: 52%; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 5; 
-            pointer-events: none; 
-        }
-
+        .mascot-on-map { width: 130px; position: absolute; bottom: 52%; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none; }
         .nav-btn { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; pointer-events: auto; }
         .nav-btn:hover { background: rgba(34, 211, 238, 0.3); border-color: cyan; }
     </style>
@@ -143,7 +132,13 @@
         }
 
         function goToMap() {
-            const lsn = CHAPTER_VAULT[viewingLevel] || { title: "COMING SOON", ch: "End" };
+            const lsn = CHAPTER_VAULT[viewingLevel] || { title: "COMING SOON", ch: 0 };
+            
+            // Logic for percentage in current chapter
+            const chapterLevels = Object.values(CHAPTER_VAULT).filter(l => l.ch === lsn.ch);
+            const firstLevelInCh = Math.min(...Object.keys(CHAPTER_VAULT).filter(k => CHAPTER_VAULT[k].ch === lsn.ch));
+            const progressInCh = ((viewingLevel - firstLevelInCh + 1) / chapterLevels.length) * 100;
+
             document.getElementById('app-container').innerHTML = `
                 <div class="relative w-full max-w-6xl aspect-video bg-contain bg-center bg-no-repeat rounded-[3rem] border-4 border-white/10 shadow-2xl overflow-hidden" style="background-image: url('map.png'); background-color: #0f172a;">
                     
@@ -157,9 +152,15 @@
                     <div class="absolute bottom-0 left-0 w-full h-24 bg-slate-900/90 flex items-center px-12 justify-between z-20">
                         <div class="flex items-center gap-6">
                             <img src="${userData.mascot}.png" class="w-16 h-16 object-contain bg-cyan-500/10 rounded-full border border-cyan-400">
-                            <div><p class="text-[10px] text-slate-500 font-bold uppercase">Chapter ${lsn.ch}</p><p class="text-2xl font-black">Level ${viewingLevel}</p></div>
+                            <div>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase">Chapter ${lsn.ch} - ${Math.round(progressInCh)}%</p>
+                                <p class="text-2xl font-black">Level ${viewingLevel}</p>
+                            </div>
                         </div>
-                        <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg">START QUEST</button>
+                        <div class="flex items-center gap-8">
+                            <div class="text-2xl font-black text-yellow-400">🟡 ${userData.coins || 0}</div>
+                            <button onclick="startQuest()" class="bg-cyan-400 text-slate-900 px-10 py-4 rounded-full font-black text-lg">START QUEST</button>
+                        </div>
                     </div>
 
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 translate-x-16 text-center z-30">
@@ -189,7 +190,7 @@
                             <button onclick="valid()" class="w-full bg-cyan-400 text-slate-900 font-black py-4 rounded-2xl">EXECUTE</button>
                         </div>
                         <div class="bg-white/5 rounded-[2rem] p-8 text-center flex flex-col justify-center">
-                            <p class="text-xs font-bold text-slate-500 mb-2 uppercase">Target Goal:</p>
+                            <p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest">Target Goal:</p>
                             ${l.type === 'quiz' ? '<p class="text-xl text-red-400 font-black italic">MEMORY CHALLENGE!</p>' : `<code class="text-2xl font-black">${l.goal}</code>`}
                         </div>
                     </div>
@@ -201,8 +202,11 @@
             const g = CHAPTER_VAULT[viewingLevel].goal.replace(/\s/g, "");
             if (i === g) {
                 if (viewingLevel === userData.currentLevel) {
-                    db.collection("users").doc(auth.currentUser.uid).update({ currentLevel: viewingLevel + 1, coins: firebase.firestore.FieldValue.increment(100) }).then(() => {
-                        userData.currentLevel++; viewingLevel++; userData.coins += 100; renderSuccess();
+                    db.collection("users").doc(auth.currentUser.uid).update({ 
+                        currentLevel: viewingLevel + 1, 
+                        coins: firebase.firestore.FieldValue.increment(100) 
+                    }).then(() => {
+                        userData.currentLevel++; viewingLevel++; userData.coins = (userData.coins || 0) + 100; renderSuccess();
                     });
                 } else goToMap();
             } else alert("Try again! Watch your syntax.");
